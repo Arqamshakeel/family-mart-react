@@ -27,6 +27,9 @@ import { BrowserRouter, Switch, Route, Link } from "react-router-dom";
 import Home from "../home/Home";
 import CustomCarousel from "../Carousel/Carousel";
 import MoreIcon from "@material-ui/icons/MoreVert";
+import FormOrder from "../order/FormOrder";
+import AddProduct from "../products/AddProduct";
+import AddProductForm from "../products/AddProductForm";
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -336,6 +339,9 @@ function ResponsiveDrawer(props) {
         <BrowserRouter>
           <Switch>
             <Route path="/" exact component={Home} />
+            <Route path="/orderform" exact component={FormOrder} />
+            <Route path="/addproduct" exact component={AddProduct} />
+            <Route path="/addproductform" exact component={AddProductForm} />
           </Switch>
         </BrowserRouter>
       </main>
