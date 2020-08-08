@@ -1,7 +1,6 @@
 import React from "react";
 import { Grid } from "@material-ui/core";
 import RecipeReviewCard from "../CustomCard";
-
 import { useMediaQuery } from "react-responsive";
 import CustomCarousel from "../Carousel/Carousel";
 import productService from "../../services/ProductServices";
@@ -24,14 +23,6 @@ const Home = () => {
     <div>
       <CustomCarousel></CustomCarousel>
       <Grid container spacing={1} align="center" justify="center">
-        {/* <RecipeReviewCard></RecipeReviewCard>
-        <RecipeReviewCard></RecipeReviewCard>
-        <RecipeReviewCard></RecipeReviewCard>
-        <RecipeReviewCard></RecipeReviewCard>
-        <RecipeReviewCard></RecipeReviewCard>
-        <RecipeReviewCard></RecipeReviewCard>
-        <RecipeReviewCard></RecipeReviewCard>
-        <RecipeReviewCard></RecipeReviewCard> */}
         {products.map((product, index) => {
           return (
             <RecipeReviewCard
