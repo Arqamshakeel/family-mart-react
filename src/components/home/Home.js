@@ -7,6 +7,7 @@ import productService from "../../services/ProductServices";
 const Home = () => {
   const [imgBuffer, setImgBuffer] = React.useState("");
   const [products, setProducts] = React.useState([]);
+
   const apiGETproducts = () => {
     productService
       .getAllProducts()
@@ -28,6 +29,8 @@ const Home = () => {
             <RecipeReviewCard
               key={index}
               image={product.image.data}
+              stock={product.stock}
+              product={product}
             ></RecipeReviewCard>
           );
         })}

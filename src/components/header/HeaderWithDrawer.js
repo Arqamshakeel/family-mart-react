@@ -22,6 +22,7 @@ import SearchIcon from "@material-ui/icons/Search";
 import InputBase from "@material-ui/core/InputBase";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import Typography from "@material-ui/core/Typography";
+import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import { makeStyles, useTheme, fade } from "@material-ui/core/styles";
 import { BrowserRouter, Switch, Route, Link } from "react-router-dom";
 import Home from "../home/Home";
@@ -30,6 +31,7 @@ import MoreIcon from "@material-ui/icons/MoreVert";
 import FormOrder from "../order/FormOrder";
 import AddProduct from "../products/AddProduct";
 import AddProductForm from "../products/AddProductForm";
+import Cart from "../cart/Cart";
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -130,6 +132,8 @@ function ResponsiveDrawer(props) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const [cartBadge, setCartBadge] = React.useState("1");
+
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const handleProfileMenuOpen = (event) => {
@@ -148,6 +152,9 @@ function ResponsiveDrawer(props) {
 
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
+  };
+  const handleCartBadge = () => {
+    return 5;
   };
   const menuId = "primary-search-account-menu";
   const renderMenu = (
@@ -273,8 +280,8 @@ function ResponsiveDrawer(props) {
               </Badge>
             </IconButton>
             <IconButton aria-label="show 17 new notifications" color="inherit">
-              <Badge badgeContent={17} color="secondary">
-                <NotificationsIcon />
+              <Badge badgeContent={cartBadge} color="secondary">
+                <ShoppingCartIcon />
               </Badge>
             </IconButton>
             <IconButton
@@ -288,6 +295,7 @@ function ResponsiveDrawer(props) {
               <AccountCircle />
             </IconButton>
           </div>
+
           <div className={classes.sectionMobile}>
             <IconButton
               aria-label="show more"
@@ -342,6 +350,11 @@ function ResponsiveDrawer(props) {
             <Route path="/orderform" exact component={FormOrder} />
             <Route path="/addproduct" exact component={AddProduct} />
             <Route path="/addproductform" exact component={AddProductForm} />
+            <Route
+              path="/cart"
+              exact
+              render={(setCartBadge) => <Cart cartbagde={setCartBadge} />}
+            />
           </Switch>
         </BrowserRouter>
       </main>
