@@ -7,6 +7,7 @@ import Drawer from "@material-ui/core/Drawer";
 import Hidden from "@material-ui/core/Hidden";
 import IconButton from "@material-ui/core/IconButton";
 import InboxIcon from "@material-ui/icons/MoveToInbox";
+import MessageIcon from "@material-ui/icons/Message";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
@@ -32,6 +33,18 @@ import FormOrder from "../order/FormOrder";
 import AddProduct from "../products/AddProduct";
 import AddProductForm from "../products/AddProductForm";
 import Cart from "../cart/Cart";
+import MaterialTableDemo from "../cart/Cart2";
+import productService from "../../services/ProductServices";
+import { withRouter } from "react-router";
+import HomeIcon from "@material-ui/icons/Home";
+import AddIcon from "@material-ui/icons/Add";
+import { useSelector, useDispatch } from "react-redux";
+import { set } from "../../Redux/actions/CartBadgeAction";
+import AddressForm from "../AddressForm/AddressForm";
+import Checkout from "../AddressForm/Checkout";
+import SignInSide from "../LoginAndSignUp/SignInSide";
+import SignUp from "../LoginAndSignUp/SignUp";
+
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -126,14 +139,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function ResponsiveDrawer(props) {
+  console.log(props);
   const { window } = props;
   const classes = useStyles();
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
-  const [cartBadge, setCartBadge] = React.useState("1");
-
+  //const [cartBadge, setCartBadge] = React.useState("0");
+  const cartBadge = useSelector((state) => state.counter);
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const handleProfileMenuOpen = (event) => {
@@ -153,9 +167,24 @@ function ResponsiveDrawer(props) {
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
-  const handleCartBadge = () => {
-    return 5;
-  };
+
+  const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    productService
+      .getAllCartData()
+      .then(function (cart) {
+        console.log(cart);
+
+        console.log("hahah" + cart.length);
+        dispatch(set(cart.length));
+        //setCartBadge(cart.length);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, [cartBadge]);
+
   const menuId = "primary-search-account-menu";
   const renderMenu = (
     <Menu
@@ -182,18 +211,23 @@ function ResponsiveDrawer(props) {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
+      <MenuItem
+        onClick={() => {
+          console.log("hello");
+          props.history.push("/cart");
+        }}
+      >
         <IconButton aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="secondary">
-            <MailIcon />
+          <Badge badgeContent={cartBadge} color="secondary">
+            <ShoppingCartIcon />
           </Badge>
         </IconButton>
-        <p>Messages</p>
+        <p>Cart</p>
       </MenuItem>
       <MenuItem>
         <IconButton aria-label="show 11 new notifications" color="inherit">
           <Badge badgeContent={11} color="secondary">
-            <NotificationsIcon />
+            <MessageIcon />
           </Badge>
         </IconButton>
         <p>Notifications</p>
@@ -216,25 +250,66 @@ function ResponsiveDrawer(props) {
       <div className={classes.toolbar} />
       <Divider />
       <List>
-        {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-            </ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <List>
-        {["All mail", "Trash", "Spam"].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-            </ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
+        <ListItem
+          button
+          onClick={() => {
+            props.history.push("/");
+          }}
+        >
+          <ListItemIcon>
+            <HomeIcon />
+          </ListItemIcon>
+          <ListItemText primary={"Home"} />
+        </ListItem>
+        <Divider />
+        <ListItem
+          button
+          onClick={() => {
+            props.history.push("/addproductform");
+          }}
+        >
+          <ListItemIcon>
+            <AddIcon />
+          </ListItemIcon>
+          <ListItemText primary={"Add Product"} />
+        </ListItem>
+        <Divider />
+        <ListItem
+          button
+          onClick={() => {
+            props.history.push("/orderform2");
+          }}
+        >
+          <ListItemIcon>
+            <AddIcon />
+          </ListItemIcon>
+          <ListItemText primary={"Order Form"} />
+        </ListItem>
+        <Divider />
+        <ListItem
+          button
+          onClick={() => {
+            props.history.push("/signin");
+          }}
+        >
+          <ListItemIcon>
+            <AddIcon />
+          </ListItemIcon>
+          <ListItemText primary={"Sign in"} />
+        </ListItem>
+        <Divider />
+        <ListItem
+          button
+          onClick={() => {
+            props.history.push("/signup");
+          }}
+        >
+          <ListItemIcon>
+            <AddIcon />
+          </ListItemIcon>
+          <ListItemText primary={"Sign up"} />
+        </ListItem>
+        <Divider />
       </List>
     </div>
   );
@@ -243,6 +318,7 @@ function ResponsiveDrawer(props) {
     window !== undefined ? () => window().document.body : undefined;
 
   return (
+    // <BrowserRouter>
     <div className={classes.root}>
       <CssBaseline />
       <AppBar position="fixed" className={classes.appBar}>
@@ -276,10 +352,16 @@ function ResponsiveDrawer(props) {
           <div className={classes.sectionDesktop}>
             <IconButton aria-label="show 4 new mails" color="inherit">
               <Badge badgeContent={4} color="secondary">
-                <MailIcon />
+                <MessageIcon />
               </Badge>
             </IconButton>
-            <IconButton aria-label="show 17 new notifications" color="inherit">
+            <IconButton
+              aria-label="show 17 new notifications"
+              color="inherit"
+              onClick={() => {
+                props.history.push("/cart");
+              }}
+            >
               <Badge badgeContent={cartBadge} color="secondary">
                 <ShoppingCartIcon />
               </Badge>
@@ -344,21 +426,22 @@ function ResponsiveDrawer(props) {
       </nav>
       <main className={classes.content}>
         <div className={classes.toolbar} />
-        <BrowserRouter>
-          <Switch>
-            <Route path="/" exact component={Home} />
-            <Route path="/orderform" exact component={FormOrder} />
-            <Route path="/addproduct" exact component={AddProduct} />
-            <Route path="/addproductform" exact component={AddProductForm} />
-            <Route
-              path="/cart"
-              exact
-              render={(setCartBadge) => <Cart cartbagde={setCartBadge} />}
-            />
-          </Switch>
-        </BrowserRouter>
+        <Switch>
+          <Route path="/" exact component={Home} />
+          <Route path="/orderform" exact component={FormOrder} />
+          <Route path="/orderform2" exact component={Checkout} />
+          <Route path="/addproduct" exact component={AddProduct} />
+          <Route path="/addproductform" exact component={AddProductForm} />
+          <Route path="/cart" exact component={Cart} />
+          <Route path="/cart2" exact component={MaterialTableDemo} />
+          <Route path="/signin" exact component={SignInSide} />
+          <Route path="/signup" exact component={SignUp} />
+        </Switch>
+        {/* <div className={classes.toolbar} /> */}
+        {/* <App /> */}
       </main>
     </div>
+    // </BrowserRouter>
   );
 }
 
@@ -370,4 +453,4 @@ ResponsiveDrawer.propTypes = {
   window: PropTypes.func,
 };
 
-export default ResponsiveDrawer;
+export default withRouter(ResponsiveDrawer);

@@ -18,6 +18,8 @@ import { Grid } from "@material-ui/core";
 import AddShoppingCartIcon from "@material-ui/icons/AddShoppingCart";
 import IncrementDecrement from "./Card Components/IncrementDecrement";
 import productService from "../services/ProductServices";
+import { useSelector, useDispatch } from "react-redux";
+import { increment, decrement, zero } from "../Redux/actions/CartBadgeAction";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,48 +45,32 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function RecipeReviewCard(props) {
+  const dispatch = useDispatch();
   // console.log(ab2str(props.image.image.data.data));
   // function ab2str(buf) {
   //   return String.fromCharCode.apply(null, new Uint16Array(buf));
   // }
+  //const cartBadge = useSelector((state) => console.log(state.counter));
 
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
   const [imgBuffer, setImgBuffer] = React.useState("");
   const [itemCounter, setItemCounter] = React.useState(1);
 
-  console.log(itemCounter);
-  // const arrayBufferToBase64 = (buffer) => {
-  //   var binary = "";
-  //   var bytes = [].slice.call(new Uint8Array(buffer));
-  //   bytes.forEach((b) => (binary += String.fromCharCode(b)));
-  //   return window.btoa(binary);
-  // };
-
-  // const apiGETproducts = () => {
-  //   productService
-  //     .getAllProducts()
-  //     .then(function (data) {
-  //       setImgBuffer(data[0].image.data.data);
-  //       console.log(data[0].image.data.data);
-  //     })
-  //     .catch(function (error) {
-  //       console.log(error);
-  //     });
-  // };
-  // React.useEffect(apiGETproducts, []);
   const apiPOSTcart = () => {
     console.log(props.product._id);
     productService
       .getCart(props.product._id, itemCounter)
       .then(function (data) {
         console.log(data);
+        console.log("In Card");
+
+        dispatch(increment());
       })
       .catch(function (error) {
         console.log(error);
       });
   };
-  //React.useEffect(apiPOSTcart, []);
 
   return (
     <Grid

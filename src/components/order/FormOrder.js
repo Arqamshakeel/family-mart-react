@@ -10,6 +10,7 @@ import {
   FormControl,
   Button,
 } from "@material-ui/core";
+import Cart from "../cart/Cart";
 const useStyles = makeStyles((theme) => ({
   root: {
     "& > *": {
@@ -36,7 +37,12 @@ const FormOrder = () => {
     <div>
       <Grid container style={{ marginTop: "10px" }}>
         <Grid item xs={12} md={4}></Grid>
-        <Grid item xs={12} md={4} style={{ textAlign: "center" }}>
+        <Grid
+          item
+          xs={12}
+          md={4}
+          style={{ textAlign: "center", marginTop: "70px" }}
+        >
           <h1>Confirm Address</h1>
         </Grid>
         <Grid item xs={12} md={4}></Grid>
@@ -48,19 +54,23 @@ const FormOrder = () => {
         justify="center"
       >
         <Grid item xs={1} style={{ border: "1px black solid" }}></Grid>
-        <Grid item xs={12} md={5} style={{ border: "1px black solid" }}>
-          <TextField
-            label="Full Name"
-            variant="outlined"
-            style={{ width: 350 }}
-          />
-          <TextField
-            className={classes.TextFieldMarginTop}
-            label="Phone Number"
-            variant="outlined"
-            type="number"
-            style={{ width: 350 }}
-          />
+        <Grid item xs={12} md={12} style={{ border: "1px black solid" }}>
+          <div>
+            <TextField
+              label="Full Name"
+              variant="outlined"
+              style={{ width: 350 }}
+            />
+          </div>
+          <div>
+            <TextField
+              className={classes.TextFieldMarginTop}
+              label="Phone Number"
+              variant="outlined"
+              type="number"
+              style={{ width: 350 }}
+            />
+          </div>
           <TextField
             className={classes.TextFieldMarginTop}
             label="Phone Number"
@@ -101,24 +111,39 @@ const FormOrder = () => {
             variant="outlined"
           />
         </Grid>
-        <Grid item xs={12} md={5} style={{ border: "1px black solid" }}>
-          Table
-        </Grid>
-
-        <Grid item xs={1} style={{ border: "1px black solid" }}></Grid>
-        {/* for button */}
-        <Grid item xs={1} style={{ border: "1px black solid" }}></Grid>
         <Grid item xs={12} md={5} style={{ border: "1px black solid" }}></Grid>
-        <Grid item xs={12} md={5} style={{ border: "1px black solid" }}>
+        <Grid container>
+          <Grid item xs={12} md={4}></Grid>
+          <Grid
+            item
+            xs={12}
+            md={4}
+            style={{ textAlign: "center", marginTop: "70px" }}
+          >
+            <h1>Cart</h1>
+          </Grid>
+        </Grid>
+        <Grid item xs={12} md={4}></Grid>
+        <Cart />
+        {/* <Grid item xs={1} style={{ border: "1px black solid" }}></Grid> */}
+        {/* for button */}
+        <Grid item xs={1}></Grid>
+        <Grid item xs={12} md={5}></Grid>
+        <Grid item xs={12} md={5}>
           <Button
-            style={{ float: "right", height: "50px" }}
+            style={{
+              float: "right",
+              height: "50px",
+              marginTop: "10px",
+              marginRight: "5px",
+            }}
             variant="contained"
             color="primary"
           >
             Confirm Order
           </Button>
         </Grid>
-        <Grid item xs={1} style={{ border: "1px black solid" }}></Grid>
+        <Grid item xs={1}></Grid>
       </Grid>
     </div>
   );
