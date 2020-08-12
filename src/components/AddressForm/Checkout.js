@@ -15,6 +15,7 @@ import PaymentForm from "./PaymentForm";
 import Review from "./Review";
 import { Snackbar } from "@material-ui/core";
 import MuiAlert from "@material-ui/lab/Alert";
+import productService from "../../services/ProductServices";
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -88,11 +89,15 @@ export default function Checkout() {
   const [activeStep, setActiveStep] = React.useState(0);
   const [open, setOpen] = React.useState(false);
   const [openError, setOpenError] = React.useState(false);
+  const [openCartEmptyError, setOpenCartEmptyError] = React.useState(false);
   const handleClick = () => {
     setOpen(true);
   };
   const handleClickErrorSnack = () => {
     setOpenError(true);
+  };
+  const handleClickErrorCartSnack = () => {
+    setOpenCartEmptyError(true);
   };
 
   const handleClose = (event, reason) => {
@@ -101,6 +106,8 @@ export default function Checkout() {
     }
 
     setOpen(false);
+    setOpenError(false);
+    setOpenCartEmptyError(false);
   };
   function getStepContent(step) {
     switch (step) {
@@ -133,13 +140,33 @@ export default function Checkout() {
       handleClick();
       console.log("There is error");
     } else {
-      setActiveStep(activeStep + 1);
+      if (activeStep + 1 < 3) setActiveStep(activeStep + 1);
     }
 
     if (activeStep == 2) {
-      handleClickErrorSnack();
-      setActiveStep(activeStep + 1);
+      apiPOSTcart();
     }
+  };
+  const apiPOSTcart = () => {
+    //console.log(props.product._id);
+    productService
+      .sendOrder({
+        area: area,
+        fname: fname,
+        lname: lname,
+        address1: address1,
+        address2: address2,
+      })
+      .then(function (res) {
+        console.log(res);
+        console.log("in then");
+        handleClickErrorSnack();
+        setActiveStep(activeStep + 1);
+      })
+      .catch(function (error) {
+        handleClickErrorCartSnack();
+        console.log(error);
+      });
   };
 
   const handleBack = () => {
@@ -153,6 +180,17 @@ export default function Checkout() {
         <Snackbar open={open} autoHideDuration={2000} onClose={handleClose}>
           <Alert onClose={handleClose} severity="error">
             Please fill all required fields
+          </Alert>
+        </Snackbar>
+      </div>
+      <div className={classes.root}>
+        <Snackbar
+          open={openCartEmptyError}
+          autoHideDuration={2000}
+          onClose={handleClose}
+        >
+          <Alert onClose={handleClose} severity="error">
+            Please add items to you cart.
           </Alert>
         </Snackbar>
       </div>

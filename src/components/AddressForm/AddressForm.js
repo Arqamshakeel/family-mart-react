@@ -85,13 +85,13 @@ export default function AddressForm({
           <TextField
             id="address2"
             name="address2"
-            label="Address line 2"
+            label="Phone"
             fullWidth
             value={address2}
             onChange={(e) => {
               setAddress2(e.target.value);
             }}
-            autoComplete="shipping address-line2"
+            autoComplete="shipping cc-number"
           />
         </Grid>
         <Grid item xs={12}>

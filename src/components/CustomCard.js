@@ -14,16 +14,23 @@ import { red } from "@material-ui/core/colors";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import ShareIcon from "@material-ui/icons/Share";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import { Grid } from "@material-ui/core";
+import { Grid, Snackbar } from "@material-ui/core";
 import AddShoppingCartIcon from "@material-ui/icons/AddShoppingCart";
 import IncrementDecrement from "./Card Components/IncrementDecrement";
 import productService from "../services/ProductServices";
 import { useSelector, useDispatch } from "react-redux";
 import { increment, decrement, zero } from "../Redux/actions/CartBadgeAction";
-
+import MuiAlert from "@material-ui/lab/Alert";
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: 345,
+    width: "100%",
+    "& > * + *": {
+      marginTop: theme.spacing(2),
+    },
   },
   media: {
     height: 0,
@@ -56,7 +63,16 @@ export default function RecipeReviewCard(props) {
   const [expanded, setExpanded] = React.useState(false);
   const [imgBuffer, setImgBuffer] = React.useState("");
   const [itemCounter, setItemCounter] = React.useState(1);
-
+  const [openErrorSnack, setOpenErrorSnack] = React.useState(false);
+  const handleClick = () => {
+    setOpenErrorSnack(true);
+  };
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenErrorSnack(false);
+  };
   const apiPOSTcart = () => {
     console.log(props.product._id);
     productService
@@ -68,6 +84,8 @@ export default function RecipeReviewCard(props) {
         dispatch(increment());
       })
       .catch(function (error) {
+        console.log(" GG error agya");
+        handleClick();
         console.log(error);
       });
   };
@@ -81,6 +99,17 @@ export default function RecipeReviewCard(props) {
       lg={3}
       style={{ border: "1px solid balck" }}
     >
+      <div className={classes.root}>
+        <Snackbar
+          open={openErrorSnack}
+          autoHideDuration={2000}
+          onClose={handleClose}
+        >
+          <Alert onClose={handleClose} severity="error">
+            Sorry, we only have {props.product.stock} of these left.
+          </Alert>
+        </Snackbar>
+      </div>
       <Card className={classes.root}>
         <CardHeader
           avatar={
