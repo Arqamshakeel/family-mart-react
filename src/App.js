@@ -16,7 +16,7 @@ import { Paper, ThemeProvider, createMuiTheme } from "@material-ui/core";
 function App() {
   const theme = createMuiTheme({
     palette: {
-      // type: "dark",
+      type: "dark",
     },
   });
   return (
