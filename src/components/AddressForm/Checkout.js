@@ -16,7 +16,9 @@ import Review from "./Review";
 import { Snackbar } from "@material-ui/core";
 import MuiAlert from "@material-ui/lab/Alert";
 import productService from "../../services/ProductServices";
-
+import axios from "axios";
+import io from "socket.io-client";
+const socket = io.connect("http://localhost:4001");
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -90,6 +92,7 @@ export default function Checkout() {
   const [open, setOpen] = React.useState(false);
   const [openError, setOpenError] = React.useState(false);
   const [openCartEmptyError, setOpenCartEmptyError] = React.useState(false);
+  const [order, setOrder] = React.useState("");
   const handleClick = () => {
     setOpen(true);
   };
@@ -163,11 +166,27 @@ export default function Checkout() {
         handleClickErrorSnack();
         setActiveStep(activeStep + 1);
       })
+      .then(() => {
+        setOrder(fname);
+        console.log(fname);
+        console.log(order);
+        socket.emit("message", { fname, lname, address1, address2, area });
+        console.log(order);
+      })
       .catch(function (error) {
         handleClickErrorCartSnack();
         console.log(error);
       });
   };
+  React.useEffect(() => {
+    socket.on(
+      "client",
+      (data) => {
+        alert(data);
+      },
+      []
+    );
+  });
 
   const handleBack = () => {
     setActiveStep(activeStep - 1);
@@ -176,7 +195,10 @@ export default function Checkout() {
   return (
     <React.Fragment>
       <CssBaseline />
-      <div className={classes.root}>
+      <div
+        style={{ display: "flex", justifyContent: "flex-end" }}
+        className={classes.root}
+      >
         <Snackbar open={open} autoHideDuration={2000} onClose={handleClose}>
           <Alert onClose={handleClose} severity="error">
             Please fill all required fields

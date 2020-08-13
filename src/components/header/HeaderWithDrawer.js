@@ -21,6 +21,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import SearchIcon from "@material-ui/icons/Search";
 import InputBase from "@material-ui/core/InputBase";
+import { useMediaQuery } from "react-responsive";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import Typography from "@material-ui/core/Typography";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
@@ -39,17 +40,28 @@ import { withRouter } from "react-router";
 import HomeIcon from "@material-ui/icons/Home";
 import AddIcon from "@material-ui/icons/Add";
 import { useSelector, useDispatch } from "react-redux";
+import { decrement, zero } from "../../Redux/actions/CartBadgeAction";
 import { set } from "../../Redux/actions/CartBadgeAction";
+import { setOrder, incrementOrder } from "../../Redux/actions/OrderBadgeAction";
 import AddressForm from "../AddressForm/AddressForm";
 import Checkout from "../AddressForm/Checkout";
 import SignInSide from "../LoginAndSignUp/SignInSide";
 import SignUp from "../LoginAndSignUp/SignUp";
+import io from "socket.io-client";
+import TestRes from "../testResponsive/TestRes";
+import BottomNav from "../Bottom navigation/BottomNav";
+import Order from "../order/Order";
+import OrderExpandable from "../order/OrderExpandable";
+const socket = io.connect("http://localhost:4001");
 
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
+  },
+  customizeToolbar: {
+    minHeight: 65,
   },
   drawer: {
     [theme.breakpoints.up("sm")]: {
@@ -82,7 +94,7 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     flexGrow: 1,
-    //padding: theme.spacing(0),
+    padding: theme.spacing(0),
   },
   search: {
     position: "relative",
@@ -91,7 +103,7 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       backgroundColor: fade(theme.palette.common.white, 0.25),
     },
-    //marginRight: theme.spacing(2),
+    marginRight: theme.spacing(2),
     marginLeft: 0,
     width: "100%",
     [theme.breakpoints.up("sm")]: {
@@ -126,8 +138,12 @@ const useStyles = makeStyles((theme) => ({
   },
   sectionDesktop: {
     display: "none",
+    position: "absolute",
+    right: theme.spacing(7),
+
     [theme.breakpoints.up("md")]: {
       display: "flex",
+      //justifyContent: "flex-end",
     },
   },
   sectionMobile: {
@@ -139,16 +155,29 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function ResponsiveDrawer(props) {
+  const isDesktopOrLaptop = useMediaQuery({
+    query: "(min-device-width: 1224px)",
+  });
+  const isBigScreen = useMediaQuery({ query: "(min-device-width: 1824px)" });
+  const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1224px)" });
+  const isTabletOrMobileDevice = useMediaQuery({
+    query: "(max-device-width: 700px)",
+  });
+  const isPortrait = useMediaQuery({ query: "(orientation: portrait)" });
+  const isRetina = useMediaQuery({ query: "(min-resolution: 2dppx)" });
+
   console.log(props);
   const { window } = props;
-  const classes = useStyles();
+
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   //const [cartBadge, setCartBadge] = React.useState("0");
-  const cartBadge = useSelector((state) => state.counter);
+  const cartBadge = useSelector((state) => state.counter.counter);
+  const orderBadge = useSelector((state) => state.order.order);
   const isMenuOpen = Boolean(anchorEl);
+  const [value, setValue] = React.useState(0);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -167,6 +196,12 @@ function ResponsiveDrawer(props) {
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
+  if (isTabletOrMobile) {
+    console.log("Yes Mob");
+  } else {
+    console.log("not des");
+  }
+  const classes = useStyles(isTabletOrMobile);
 
   const dispatch = useDispatch();
 
@@ -183,7 +218,33 @@ function ResponsiveDrawer(props) {
       .catch(function (error) {
         console.log(error);
       });
-  }, [cartBadge]);
+  }, [cartBadge, orderBadge]);
+  React.useEffect(() => {
+    productService
+      .getOrder()
+      .then(function (order) {
+        //console.log(cart);
+
+        console.log("Order length" + order.length);
+        dispatch(setOrder(order.length));
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, [cartBadge, orderBadge]);
+
+  React.useEffect(() => {
+    socket.on("client", (data) => {
+      console.log("in order useEffect");
+      // alert(data);
+      console.log("data");
+      console.log(data);
+
+      dispatch(incrementOrder());
+      console.log(orderBadge);
+      // dispatch(incrementOrder());
+    });
+  }, []);
 
   const menuId = "primary-search-account-menu";
   const renderMenu = (
@@ -224,7 +285,12 @@ function ResponsiveDrawer(props) {
         </IconButton>
         <p>Cart</p>
       </MenuItem>
-      <MenuItem>
+      <MenuItem
+        onClick={() => {
+          console.log("hello");
+          props.history.push("/allorders");
+        }}
+      >
         <IconButton aria-label="show 11 new notifications" color="inherit">
           <Badge badgeContent={11} color="secondary">
             <MessageIcon />
@@ -254,6 +320,8 @@ function ResponsiveDrawer(props) {
           button
           onClick={() => {
             props.history.push("/");
+
+            if (isTabletOrMobile) handleDrawerToggle();
           }}
         >
           <ListItemIcon>
@@ -266,6 +334,7 @@ function ResponsiveDrawer(props) {
           button
           onClick={() => {
             props.history.push("/addproductform");
+            if (isTabletOrMobile) handleDrawerToggle();
           }}
         >
           <ListItemIcon>
@@ -278,6 +347,7 @@ function ResponsiveDrawer(props) {
           button
           onClick={() => {
             props.history.push("/orderform2");
+            if (isTabletOrMobile) handleDrawerToggle();
           }}
         >
           <ListItemIcon>
@@ -290,6 +360,7 @@ function ResponsiveDrawer(props) {
           button
           onClick={() => {
             props.history.push("/signin");
+            if (isTabletOrMobile) handleDrawerToggle();
           }}
         >
           <ListItemIcon>
@@ -302,6 +373,7 @@ function ResponsiveDrawer(props) {
           button
           onClick={() => {
             props.history.push("/signup");
+            if (isTabletOrMobile) handleDrawerToggle();
           }}
         >
           <ListItemIcon>
@@ -321,8 +393,9 @@ function ResponsiveDrawer(props) {
     // <BrowserRouter>
     <div className={classes.root}>
       <CssBaseline />
+      {/* {isTabletOrMobile ? <BottomNav /> : <></>} */}
       <AppBar position="fixed" className={classes.appBar}>
-        <Toolbar>
+        <Toolbar className={classes.customizeToolbar}>
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -350,8 +423,14 @@ function ResponsiveDrawer(props) {
           </div>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-            <IconButton aria-label="show 4 new mails" color="inherit">
-              <Badge badgeContent={4} color="secondary">
+            <IconButton
+              aria-label="show 4 new mails"
+              color="inherit"
+              onClick={() => {
+                props.history.push("/allorders");
+              }}
+            >
+              <Badge badgeContent={orderBadge} color="secondary">
                 <MessageIcon />
               </Badge>
             </IconButton>
@@ -424,6 +503,7 @@ function ResponsiveDrawer(props) {
           </Drawer>
         </Hidden>
       </nav>
+
       <main className={classes.content}>
         <div className={classes.toolbar} />
         <Switch>
@@ -436,10 +516,26 @@ function ResponsiveDrawer(props) {
           <Route path="/cart2" exact component={MaterialTableDemo} />
           <Route path="/signin" exact component={SignInSide} />
           <Route path="/signup" exact component={SignUp} />
+          <Route path="/allorders" exact component={OrderExpandable} />
+          {/* <Route path="/nav" exact component={BottomNav} /> */}
         </Switch>
+        {isTabletOrMobileDevice && isPortrait ? <BottomNav /> : <></>}
+
         {/* <div className={classes.toolbar} /> */}
         {/* <App /> */}
       </main>
+      {/* <BottomNavigation
+        value={value}
+        onChange={(event, newValue) => {
+          setValue(newValue);
+        }}
+        showLabels
+        className={classes.root}
+      >
+        <BottomNavigationAction label="Recents" icon={<MailIcon />} />
+        <BottomNavigationAction label="Favorites" icon={<MailIcon />} />
+        <BottomNavigationAction label="Nearby" icon={<MailIcon />} />
+      </BottomNavigation> */}
     </div>
     // </BrowserRouter>
   );

@@ -12,12 +12,12 @@ import { Grid, IconButton, Badge, Typography } from "@material-ui/core";
 import { Checkbox } from "@material-ui/core";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  increment,
-  decrement,
-  zero,
-  set,
-} from "../../Redux/actions/CartBadgeAction";
+// import {
+//   increment,
+//   decrement,
+//   zero,
+//   set,
+// } from "../../Redux/actions/orderBadgeAction";
 
 const TAX_RATE = 0.07;
 
@@ -48,11 +48,11 @@ const rows = [
   createRow("Waste Basket", 2, 17.99),
 ];
 
-const Cart = (props) => {
+const Order = (props) => {
   const dispatch = useDispatch();
   const classes = useStyles();
 
-  const [cart, setCart] = React.useState([]);
+  const [order, setorder] = React.useState([]);
   const [subtotal, setSubtotal] = React.useState([]);
   const [total, setTotal] = React.useState(0);
   // var total = 0;
@@ -60,38 +60,38 @@ const Cart = (props) => {
     // console.log(item);
 
     var test = 0;
-    for (let i = 0; i < cart.length; i++) {
-      test = test + Number(cart[i].qty) * Number(cart[i].price);
+    for (let i = 0; i < order.length; i++) {
+      test = test + Number(order[i].qty) * Number(order[i].price);
       console.log(test);
     }
 
-    setTotal(test);
+    //setTotal(test);
     // total = total + Number(item.qty) * Number(item.price);
     // return total;
   };
 
-  const apiPOSTcart = () => {
+  const apiPOSTorder = () => {
     //console.log(props.product._id);
     productService
-      .getAllCartData()
-      .then(function (cart) {
-        console.log(cart);
-        setCart(cart);
-        console.log("hahah" + cart.length);
-        var test = 0;
-        for (let i = 0; i < cart.length; i++) {
-          test = test + Number(cart[i].qty) * Number(cart[i].price);
-          console.log(test);
-        }
+      .getOrder()
+      .then(function (order) {
+        console.log(order);
+        setorder(order);
+        // console.log("hahah" + order.length);
+        // var test = 0;
+        // for (let i = 0; i < order.length; i++) {
+        //   test = test + Number(order[i].qty) * Number(order[i].price);
+        //   console.log(test);
+        // }
 
-        setTotal(test);
-        //props.cartbagde("10");
+        // setTotal(test);
+        //props.orderbagde("10");
       })
       .catch(function (error) {
         console.log(error);
       });
   };
-  React.useEffect(apiPOSTcart, []);
+  React.useEffect(apiPOSTorder, []);
   //React.useEffect(handleTotal, [total]);
   const handleDelete = (id) => {
     //console.log();
@@ -102,7 +102,7 @@ const Cart = (props) => {
     <Grid container>
       <Grid item xs={12} md={1}></Grid>
       <Grid item xs={12} md={10}>
-        <TableContainer component={Paper} style={{ marginTop: "0px" }}>
+        <TableContainer component={Paper} style={{ marginTop: "100px" }}>
           <Table className={classes.table} aria-label="spanning table">
             <TableHead>
               <TableRow>
@@ -112,7 +112,7 @@ const Cart = (props) => {
                 <TableCell align="right">Price</TableCell>
               </TableRow>
               <TableRow>
-                <TableCell>Name</TableCell>
+                <TableCell>hahaha</TableCell>
                 <TableCell>Name</TableCell>
                 <TableCell>Company</TableCell>
                 <TableCell>Qty.</TableCell>
@@ -121,23 +121,23 @@ const Cart = (props) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {console.log(cart.length)}
-              {cart ? (
-                cart.map((item, index) => {
+              {console.log(order.length)}
+              {order ? (
+                order.map((item, index) => {
                   return (
                     <TableRow key={index}>
                       <TableCell>
                         <IconButton
                           onClick={() => {
                             productService
-                              .deleteCartItem(item.id)
-                              .then(function (cart) {
-                                console.log(cart.length);
+                              .deleteorderItem(item.id)
+                              .then(function (order) {
+                                console.log(order.length);
                                 //console.log();
-                                setCart(cart);
-                                dispatch(set(cart.length));
-                                apiPOSTcart();
-                                //props.cartbagde("10");
+                                //setorder(order);
+                                //dispatch(set(order.length));
+                                //apiPOSTorder();
+                                //props.orderbagde("10");
                               })
                               .catch(function (error) {
                                 console.log(error);
@@ -149,10 +149,14 @@ const Cart = (props) => {
                           <DeleteOutlineIcon />
                         </IconButton>
                       </TableCell>
-                      <TableCell>{item.name}</TableCell>
-                      <TableCell>{item.company}</TableCell>
-                      <TableCell>{item.qty}</TableCell>
-                      <TableCell>{item.price}</TableCell>
+                      <TableCell>{item.customerData.fname}</TableCell>
+                      <TableCell>{item.customerData.address}</TableCell>
+                      <TableCell>{item.customerData.phone}</TableCell>
+                      <TableCell>
+                        {item.customerData.cart.map((product, index) => {
+                          return <div key={index}>{product.name}</div>;
+                        })}
+                      </TableCell>
                       <TableCell align="right">
                         {Number(item.qty) * Number(item.price)}
                       </TableCell>
@@ -182,4 +186,4 @@ const Cart = (props) => {
   );
 };
 
-export default Cart;
+export default Order;
