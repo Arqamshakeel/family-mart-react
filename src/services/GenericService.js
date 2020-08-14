@@ -1,5 +1,5 @@
 import axios from "axios";
-axios.defaults.baseURL = "/api/";
+axios.defaults.baseURL = "https://test-express-arqam.herokuapp.com/api/";
 //axios.defaults.baseURL = "https://test-express-arqam.herokuapp.com/api";
 axios.defaults.withCredentials = true;
 class GenericService {
