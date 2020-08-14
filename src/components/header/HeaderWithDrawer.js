@@ -404,10 +404,8 @@ function ResponsiveDrawer(props) {
     window !== undefined ? () => window().document.body : undefined;
 
   return (
-    // <BrowserRouter>
     <div className={classes.root}>
       <CssBaseline />
-      {/* {isTabletOrMobile ? <BottomNav /> : <></>} */}
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar className={classes.customizeToolbar}>
           <IconButton
@@ -442,7 +440,6 @@ function ResponsiveDrawer(props) {
               color="inherit"
               onClick={() => {
                 props.history.push("/allorders");
-                // buttonClick();
               }}
             >
               <Badge badgeContent={orderBadge} color="secondary">
@@ -488,7 +485,6 @@ function ResponsiveDrawer(props) {
       {renderMobileMenu}
       {renderMenu}
       <nav className={classes.drawer} aria-label="mailbox folders">
-        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
         <Hidden smUp implementation="css">
           <Drawer
             container={container}
@@ -500,7 +496,7 @@ function ResponsiveDrawer(props) {
               paper: classes.drawerPaper,
             }}
             ModalProps={{
-              keepMounted: true, // Better open performance on mobile.
+              keepMounted: true,
             }}
           >
             {drawer}
@@ -532,27 +528,10 @@ function ResponsiveDrawer(props) {
           <Route path="/signin" exact component={SignInSide} />
           <Route path="/signup" exact component={SignUp} />
           <Route path="/allorders" exact component={OrderExpandable} />
-          {/* <Route path="/nav" exact component={BottomNav} /> */}
         </Switch>
         {isTabletOrMobileDevice && isPortrait ? <BottomNav /> : <></>}
-
-        {/* <div className={classes.toolbar} /> */}
-        {/* <App /> */}
       </main>
-      {/* <BottomNavigation
-        value={value}
-        onChange={(event, newValue) => {
-          setValue(newValue);
-        }}
-        showLabels
-        className={classes.root}
-      >
-        <BottomNavigationAction label="Recents" icon={<MailIcon />} />
-        <BottomNavigationAction label="Favorites" icon={<MailIcon />} />
-        <BottomNavigationAction label="Nearby" icon={<MailIcon />} />
-      </BottomNavigation> */}
     </div>
-    // </BrowserRouter>
   );
 }
 
