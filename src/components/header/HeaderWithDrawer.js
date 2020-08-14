@@ -54,7 +54,8 @@ import Order from "../order/Order";
 import OrderExpandable from "../order/OrderExpandable";
 import addNotification from "react-push-notification";
 
-const socket = io.connect("http://localhost:4001");
+//const socket = io.connect("http://localhost:4001");
+const socket = io.connect("https://test-express-arqam.herokuapp.com:4001");
 //const socket = io.connect("https://test-express-arqam.herokuapp.com:4001");
 
 const drawerWidth = 240;

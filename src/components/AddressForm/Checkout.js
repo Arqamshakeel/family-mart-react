@@ -18,7 +18,8 @@ import MuiAlert from "@material-ui/lab/Alert";
 import productService from "../../services/ProductServices";
 import axios from "axios";
 import io from "socket.io-client";
-const socket = io.connect("http://localhost:4001");
+//const socket = io.connect("http://localhost:4001");
+const socket = io.connect("https://test-express-arqam.herokuapp.com:4001");
 //const socket = io.connect("https://test-express-arqam.herokuapp.com:4001");
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
