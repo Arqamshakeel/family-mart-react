@@ -11,6 +11,7 @@ class ProductServices extends GenericService {
   deleteCartItem = (_id) => this.delete("products/cart/" + _id, _id);
   sendOrder = (data) => this.post("products/neworder", data);
   getOrder = () => this.get("products/orders/");
+  UserLogin = (data) => this.post("users/login/");
 }
 
 let productService = new ProductServices();

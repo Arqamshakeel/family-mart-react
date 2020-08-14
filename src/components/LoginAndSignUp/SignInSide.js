@@ -12,6 +12,7 @@ import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
+import productService from "../../services/ProductServices";
 
 function Copyright() {
   return (
@@ -62,6 +63,17 @@ const useStyles = makeStyles((theme) => ({
 export default function SignInSide() {
   const classes = useStyles();
 
+  const handleLogin = () => {
+    productService
+      .UserLogin()
+      .then(function (token) {
+        console.log(token);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
   return (
     <Grid container component="main" className={classes.root}>
       <CssBaseline />
@@ -102,11 +114,11 @@ export default function SignInSide() {
               label="Remember me"
             />
             <Button
-              type="submit"
               fullWidth
               variant="contained"
               color="primary"
               className={classes.submit}
+              onClick={handleLogin}
             >
               Sign In
             </Button>
