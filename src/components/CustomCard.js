@@ -103,7 +103,7 @@ export default function RecipeReviewCard(props) {
           </Alert>
         </Snackbar>
       </div>
-      <Card className={classes.root}>
+      <Card className={classes.root} elevation={9}>
         <CardHeader
           avatar={
             <Avatar aria-label="recipe" className={classes.avatar}>

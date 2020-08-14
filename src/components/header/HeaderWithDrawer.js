@@ -52,7 +52,10 @@ import TestRes from "../testResponsive/TestRes";
 import BottomNav from "../Bottom navigation/BottomNav";
 import Order from "../order/Order";
 import OrderExpandable from "../order/OrderExpandable";
+import addNotification from "react-push-notification";
+
 const socket = io.connect("http://localhost:4001");
+//const socket = io.connect("https://test-express-arqam.herokuapp.com:4001");
 
 const drawerWidth = 240;
 
@@ -192,6 +195,16 @@ function ResponsiveDrawer(props) {
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+  const buttonClick = () => {
+    console.log("Notification");
+    addNotification({
+      title: "Warning",
+      subtitle: "This is a subtitle",
+      message: "New Order",
+      theme: "darkblue",
+      native: true, // when using native, your OS will handle theming.
+    });
+  };
 
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
@@ -242,6 +255,7 @@ function ResponsiveDrawer(props) {
 
       dispatch(incrementOrder());
       console.log(orderBadge);
+      buttonClick();
       // dispatch(incrementOrder());
     });
   }, []);
@@ -428,6 +442,7 @@ function ResponsiveDrawer(props) {
               color="inherit"
               onClick={() => {
                 props.history.push("/allorders");
+                // buttonClick();
               }}
             >
               <Badge badgeContent={orderBadge} color="secondary">

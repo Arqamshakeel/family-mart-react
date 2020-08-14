@@ -4,7 +4,7 @@ import BottomNavigation from "@material-ui/core/BottomNavigation";
 import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
 import RestoreIcon from "@material-ui/icons/Restore";
 import FavoriteIcon from "@material-ui/icons/Favorite";
-import LocationOnIcon from "@material-ui/icons/LocationOn";
+import MailIcon from "@material-ui/icons/Mail";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import { Badge, createMuiTheme, ThemeProvider, Paper } from "@material-ui/core";
 import { withRouter } from "react-router-dom";
@@ -23,6 +23,7 @@ const useStyles = makeStyles({
 
 const BottomNav = (props) => {
   const cartBadge = useSelector((state) => state.counter.counter);
+  const orderBadge = useSelector((state) => state.order.order);
   const theme = createMuiTheme({
     palette: {
       type: "dark",
@@ -67,7 +68,19 @@ const BottomNav = (props) => {
               props.history.push("/");
             }}
           />
-          <BottomNavigationAction label="Nearby" icon={<LocationOnIcon />} />
+          <BottomNavigationAction
+            label="Nearby"
+            onClick={() => {
+              console.log("yessssss");
+
+              props.history.push("/allorders");
+            }}
+            icon={
+              <Badge badgeContent={orderBadge} color="secondary">
+                <MailIcon />
+              </Badge>
+            }
+          />
         </BottomNavigation>
       </Paper>
     </ThemeProvider>
