@@ -62,7 +62,7 @@ const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: "flex",
+    // display: "flex",
   },
   customizeToolbar: {
     minHeight: 65,
@@ -97,7 +97,11 @@ const useStyles = makeStyles((theme) => ({
     width: drawerWidth,
   },
   content: {
-    flexGrow: 1,
+    [theme.breakpoints.up("sm")]: {
+      marginLeft: drawerWidth,
+      width: `calc(100% - ${drawerWidth}px)`,
+    },
+    //  flexGrow: 1,
     padding: theme.spacing(0),
   },
   search: {

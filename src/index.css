@@ -5,7 +5,12 @@
 body {
   margin: 0;
   padding: 0;
-
+  /* added from a site remove later */
+  overflow: hidden;
+  -ms-touch-action: none;
+  touch-action: none;
+  padding-right: 0px;
+  /* added from a site remove later */
   font-family: "Roboto";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
