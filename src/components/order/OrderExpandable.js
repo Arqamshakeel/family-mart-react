@@ -15,6 +15,8 @@ import Paper from "@material-ui/core/Paper";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import productService from "../../services/ProductServices";
+import CheckAdmin from "../../auth/CheckAdmin";
+import { useSelector, useDispatch } from "react-redux";
 
 const useRowStyles = makeStyles({
   root: {
@@ -42,6 +44,7 @@ function createData(name, calories, fat, carbs, protein, price) {
 function Row(props) {
   const { row } = props;
   const [open, setOpen] = React.useState(false);
+  const [show, setshow] = React.useState(true);
   const classes = useRowStyles();
 
   return (
@@ -103,23 +106,23 @@ function Row(props) {
   );
 }
 
-Row.propTypes = {
-  row: PropTypes.shape({
-    calories: PropTypes.number.isRequired,
-    carbs: PropTypes.number.isRequired,
-    fat: PropTypes.number.isRequired,
-    history: PropTypes.arrayOf(
-      PropTypes.shape({
-        amount: PropTypes.number.isRequired,
-        customerId: PropTypes.string.isRequired,
-        date: PropTypes.string.isRequired,
-      })
-    ).isRequired,
-    name: PropTypes.string.isRequired,
-    price: PropTypes.number.isRequired,
-    protein: PropTypes.number.isRequired,
-  }).isRequired,
-};
+// Row.propTypes = {
+//   row: PropTypes.shape({
+//     calories: PropTypes.number.isRequired,
+//     carbs: PropTypes.number.isRequired,
+//     fat: PropTypes.number.isRequired,
+//     history: PropTypes.arrayOf(
+//       PropTypes.shape({
+//         amount: PropTypes.number.isRequired,
+//         customerId: PropTypes.string.isRequired,
+//         date: PropTypes.string.isRequired,
+//       })
+//     ).isRequired,
+//     name: PropTypes.string.isRequired,
+//     price: PropTypes.number.isRequired,
+//     protein: PropTypes.number.isRequired,
+//   }).isRequired,
+// };
 
 const rows = [
   createData("Frozen yoghurt", 159, 6.0, 24, 4.0, 3.99),
@@ -129,7 +132,8 @@ const rows = [
   createData("Gingerbread", 356, 16.0, 49, 3.9, 1.5),
 ];
 
-export default function OrderExpandable() {
+export default function OrderExpandable(props) {
+  const isLoggedInRedux = useSelector((state) => state.login.isloggedin);
   const [order, setorder] = React.useState([]);
   const apiPOSTorder = () => {
     //console.log(props.product._id);
@@ -144,27 +148,36 @@ export default function OrderExpandable() {
       });
   };
   React.useEffect(apiPOSTorder, []);
+
+  // React.useEffect(() => {
+  //   if (!isLoggedInRedux) {
+  //     props.history.push("/");
+  //   }
+  // }, [isLoggedInRedux]);
+
   //React.useEffect(handleTotal, [total]);
 
   return (
-    <TableContainer component={Paper}>
-      <Table aria-label="collapsible table">
-        <TableHead>
-          <TableRow>
-            <TableCell />
-            <TableCell>Customer Name</TableCell>
-            <TableCell align="left">Address</TableCell>
-            <TableCell align="left">Phone no</TableCell>
-            <TableCell align="left">Area</TableCell>
-            <TableCell align="right">Protein&nbsp;(g)</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {order.map((item, index) => (
-            <Row key={index} row={item} />
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <CheckAdmin>
+      <TableContainer component={Paper}>
+        <Table aria-label="collapsible table">
+          <TableHead>
+            <TableRow>
+              <TableCell />
+              <TableCell>Customer Name</TableCell>
+              <TableCell align="left">Address</TableCell>
+              <TableCell align="left">Phone no</TableCell>
+              <TableCell align="left">Area</TableCell>
+              <TableCell align="right">Protein&nbsp;(g)</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {order.map((item, index) => (
+              <Row key={index} row={item} />
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </CheckAdmin>
   );
 }

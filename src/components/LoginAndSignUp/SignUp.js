@@ -12,6 +12,9 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
+import productService from "../../services/ProductServices";
+import userService from "../../services/UserService";
+import SnackBar from "../snackBar/SnackBar";
 
 function Copyright() {
   return (
@@ -48,6 +51,32 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignUp() {
   const classes = useStyles();
+  const [fname, setFname] = React.useState("");
+  const [lname, setLname] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [open, setOpen] = React.useState(false);
+  const [msg, setmsg] = React.useState("");
+
+  const handleLogin = () => {
+    userService
+      .UserReg({
+        email: email,
+        password: password,
+        fname: fname,
+        lname: lname,
+      })
+      .then(function (res) {
+        console.log(res);
+        console.log("hello");
+      })
+      .catch(function (error) {
+        console.log(error);
+        console.log(error.response.data);
+        setOpen(true);
+        setmsg(error.response.data);
+      });
+  };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -60,6 +89,7 @@ export default function SignUp() {
           Sign up
         </Typography>
         <form className={classes.form} noValidate>
+          <SnackBar open={open} setOpen={setOpen} msg={msg} />
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField
@@ -68,8 +98,11 @@ export default function SignUp() {
                 variant="outlined"
                 required
                 fullWidth
-                id="firstName"
                 label="First Name"
+                value={fname}
+                onChange={(e) => {
+                  setFname(e.target.value);
+                }}
                 autoFocus
               />
             </Grid>
@@ -78,9 +111,12 @@ export default function SignUp() {
                 variant="outlined"
                 required
                 fullWidth
-                id="lastName"
                 label="Last Name"
                 name="lastName"
+                value={lname}
+                onChange={(e) => {
+                  setLname(e.target.value);
+                }}
                 autoComplete="lname"
               />
             </Grid>
@@ -92,6 +128,10 @@ export default function SignUp() {
                 id="email"
                 label="Email Address"
                 name="email"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                }}
                 autoComplete="email"
               />
             </Grid>
@@ -104,6 +144,10 @@ export default function SignUp() {
                 label="Password"
                 type="password"
                 id="password"
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                }}
                 autoComplete="current-password"
               />
             </Grid>
@@ -115,11 +159,11 @@ export default function SignUp() {
             </Grid>
           </Grid>
           <Button
-            type="submit"
             fullWidth
             variant="contained"
             color="primary"
             className={classes.submit}
+            onClick={handleLogin}
           >
             Sign Up
           </Button>

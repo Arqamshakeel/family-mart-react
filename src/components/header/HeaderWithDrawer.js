@@ -47,15 +47,23 @@ import AddressForm from "../AddressForm/AddressForm";
 import Checkout from "../AddressForm/Checkout";
 import SignInSide from "../LoginAndSignUp/SignInSide";
 import SignUp from "../LoginAndSignUp/SignUp";
+import Brightness4Icon from "@material-ui/icons/Brightness4";
 import io from "socket.io-client";
 import TestRes from "../testResponsive/TestRes";
 import BottomNav from "../Bottom navigation/BottomNav";
 import Order from "../order/Order";
 import OrderExpandable from "../order/OrderExpandable";
 import addNotification from "react-push-notification";
-
-//const socket = io.connect("http://localhost:4001");
-const socket = io.connect("https://test-express-arqam.herokuapp.com:4001");
+import { Button, Avatar } from "@material-ui/core";
+import userService from "../../services/UserService";
+import { switchLogin, falseLogin } from "../../Redux/actions/LoginAction";
+import { red } from "@material-ui/core/colors";
+import Tooltip from "@material-ui/core/Tooltip";
+import CustomList from "../List/CustomList";
+import EditProducts from "../products/EditProducts";
+import UpdateProduct from "../products/UpdateProduct";
+const socket = io.connect("http://localhost:4001");
+//const socket = io.connect("https://test-express-arqam.herokuapp.com:4001");
 //const socket = io.connect("https://test-express-arqam.herokuapp.com:4001");
 
 const drawerWidth = 240;
@@ -103,6 +111,9 @@ const useStyles = makeStyles((theme) => ({
     },
     //  flexGrow: 1,
     padding: theme.spacing(0),
+  },
+  avatar: {
+    backgroundColor: red[500],
   },
   search: {
     position: "relative",
@@ -187,6 +198,10 @@ function ResponsiveDrawer(props) {
   const isMenuOpen = Boolean(anchorEl);
   const [value, setValue] = React.useState(0);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+  const isLoggedInRedux = useSelector((state) => state.login.isloggedin);
+  const dispatch = useDispatch();
+
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -203,10 +218,10 @@ function ResponsiveDrawer(props) {
   const buttonClick = () => {
     console.log("Notification");
     addNotification({
-      title: "Warning",
+      title: "Family Mart",
       subtitle: "This is a subtitle",
       message: "New Order",
-      theme: "darkblue",
+      // theme: "darkblue",
       native: true, // when using native, your OS will handle theming.
     });
   };
@@ -221,15 +236,10 @@ function ResponsiveDrawer(props) {
   }
   const classes = useStyles(isTabletOrMobile);
 
-  const dispatch = useDispatch();
-
   React.useEffect(() => {
     productService
       .getAllCartData()
       .then(function (cart) {
-        console.log(cart);
-
-        console.log("hahah" + cart.length);
         dispatch(set(cart.length));
         //setCartBadge(cart.length);
       })
@@ -243,7 +253,6 @@ function ResponsiveDrawer(props) {
       .then(function (order) {
         //console.log(cart);
 
-        console.log("Order length" + order.length);
         dispatch(setOrder(order.length));
       })
       .catch(function (error) {
@@ -253,16 +262,16 @@ function ResponsiveDrawer(props) {
 
   React.useEffect(() => {
     socket.on("client", (data) => {
-      console.log("in order useEffect");
-      // alert(data);
-      console.log("data");
-      console.log(data);
-
       dispatch(incrementOrder());
-      console.log(orderBadge);
-      buttonClick();
+
+      if (userService.isAdmin()) buttonClick();
       // dispatch(incrementOrder());
     });
+  }, []);
+  React.useEffect(() => {
+    if (userService.isLoggedin()) {
+      dispatch(switchLogin());
+    }
   }, []);
 
   const menuId = "primary-search-account-menu";
@@ -293,7 +302,6 @@ function ResponsiveDrawer(props) {
     >
       <MenuItem
         onClick={() => {
-          console.log("hello");
           props.history.push("/cart");
         }}
       >
@@ -306,7 +314,6 @@ function ResponsiveDrawer(props) {
       </MenuItem>
       <MenuItem
         onClick={() => {
-          console.log("hello");
           props.history.push("/allorders");
         }}
       >
@@ -401,6 +408,10 @@ function ResponsiveDrawer(props) {
           <ListItemText primary={"Sign up"} />
         </ListItem>
         <Divider />
+        <CustomList
+          isTabletOrMobile={isTabletOrMobile}
+          handleDrawerToggle={handleDrawerToggle}
+        />
       </List>
     </div>
   );
@@ -440,17 +451,63 @@ function ResponsiveDrawer(props) {
           </div>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-            <IconButton
-              aria-label="show 4 new mails"
-              color="inherit"
-              onClick={() => {
-                props.history.push("/allorders");
-              }}
-            >
-              <Badge badgeContent={orderBadge} color="secondary">
-                <MessageIcon />
-              </Badge>
-            </IconButton>
+            {isLoggedInRedux ? (
+              <span>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={() => {
+                    userService.logout();
+                    dispatch(falseLogin());
+                  }}
+                >
+                  <Typography variant="button" variant="h6">
+                    Sign out
+                  </Typography>
+                </Button>
+              </span>
+            ) : (
+              <div>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={() => {
+                    props.history.push("/signin");
+                  }}
+                >
+                  <Typography variant="button" variant="h6">
+                    Sign in
+                  </Typography>
+                </Button>
+                <Button
+                  onClick={() => {
+                    props.history.push("/signup");
+                  }}
+                  variant="outlined"
+                  color="secondary"
+                  style={{ marginLeft: "8px" }}
+                >
+                  <Typography variant="button" variant="h6">
+                    Register
+                  </Typography>
+                </Button>
+              </div>
+            )}
+            {isLoggedInRedux ? (
+              <IconButton
+                aria-label="show 4 new mails"
+                color="inherit"
+                onClick={() => {
+                  props.history.push("/allorders");
+                }}
+              >
+                <Badge badgeContent={orderBadge} color="secondary">
+                  <MessageIcon />
+                </Badge>
+              </IconButton>
+            ) : (
+              <></>
+            )}
             <IconButton
               aria-label="show 17 new notifications"
               color="inherit"
@@ -463,6 +520,17 @@ function ResponsiveDrawer(props) {
               </Badge>
             </IconButton>
             <IconButton
+              aria-label="show 17 new notifications"
+              color="inherit"
+              onClick={() => {
+                props.setDark(!props.dark);
+              }}
+            >
+              <Badge color="secondary">
+                <Brightness4Icon />
+              </Badge>
+            </IconButton>
+            {/* <IconButton
               edge="end"
               aria-label="account of current user"
               aria-controls={menuId}
@@ -471,7 +539,20 @@ function ResponsiveDrawer(props) {
               color="inherit"
             >
               <AccountCircle />
-            </IconButton>
+            </IconButton> */}
+            {isLoggedInRedux ? (
+              <Tooltip title={userService.getloggedinuser().name}>
+                <span style={{ margin: "auto", marginLeft: "10px" }}>
+                  <Avatar aria-label="recipe" className={classes.avatar}>
+                    {userService.getloggedinuser().name
+                      ? userService.getloggedinuser().name[0].toUpperCase()
+                      : null}
+                  </Avatar>
+                </span>
+              </Tooltip>
+            ) : (
+              <></>
+            )}
           </div>
 
           <div className={classes.sectionMobile}>
@@ -533,6 +614,8 @@ function ResponsiveDrawer(props) {
           <Route path="/signin" exact component={SignInSide} />
           <Route path="/signup" exact component={SignUp} />
           <Route path="/allorders" exact component={OrderExpandable} />
+          <Route path="/editproduct" exact component={EditProducts} />
+          <Route path="/updateproduct/:id" exact component={UpdateProduct} />
         </Switch>
         {isTabletOrMobileDevice && isPortrait ? <BottomNav /> : <></>}
       </main>

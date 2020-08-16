@@ -14,9 +14,10 @@ import { useMediaQuery } from "react-responsive";
 import { Paper, ThemeProvider, createMuiTheme } from "@material-ui/core";
 
 function App() {
+  const [dark, setDark] = React.useState(false);
   const theme = createMuiTheme({
     palette: {
-      type: "dark",
+      type: dark ? "dark" : "light",
     },
   });
   return (
@@ -25,7 +26,7 @@ function App() {
         <ThemeProvider theme={theme}>
           <Paper>
             <Notifications position="bottom-right" />
-            <HeaderWithDrawer />
+            <HeaderWithDrawer dark={dark} setDark={setDark} />
           </Paper>
         </ThemeProvider>
       </BrowserRouter>

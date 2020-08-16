@@ -14,23 +14,32 @@ import { red } from "@material-ui/core/colors";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import ShareIcon from "@material-ui/icons/Share";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import { Grid, Snackbar } from "@material-ui/core";
+import { Grid, Snackbar, Fab } from "@material-ui/core";
 import AddShoppingCartIcon from "@material-ui/icons/AddShoppingCart";
 import IncrementDecrement from "./Card Components/IncrementDecrement";
 import productService from "../services/ProductServices";
 import { useSelector, useDispatch } from "react-redux";
 import { increment, decrement, zero } from "../Redux/actions/CartBadgeAction";
 import MuiAlert from "@material-ui/lab/Alert";
+import EditIcon from "@material-ui/icons/Edit";
+import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
+import userService from "../services/UserService";
+import SnackBar from "./snackBar/SnackBar";
+import { withRouter } from "react-router-dom";
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 const useStyles = makeStyles((theme) => ({
   root: {
+    // height: "400px",
     maxWidth: 345,
     width: "100%",
     "& > * + *": {
       marginTop: theme.spacing(2),
     },
+  },
+  fullHeightCard: {
+    // height: "100%",
   },
   media: {
     height: 0,
@@ -51,7 +60,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function RecipeReviewCard(props) {
+const RecipeReviewCard = (props) => {
   const dispatch = useDispatch();
   // console.log(ab2str(props.image.image.data.data));
   // function ab2str(buf) {
@@ -64,6 +73,8 @@ export default function RecipeReviewCard(props) {
   const [imgBuffer, setImgBuffer] = React.useState("");
   const [itemCounter, setItemCounter] = React.useState(1);
   const [openErrorSnack, setOpenErrorSnack] = React.useState(false);
+  const [openDeleteSnack, setOpenDeleteSnack] = React.useState(false);
+  const [msgSnack, setmsgSnack] = React.useState("");
   const handleClick = () => {
     setOpenErrorSnack(true);
   };
@@ -74,21 +85,41 @@ export default function RecipeReviewCard(props) {
     setOpenErrorSnack(false);
   };
   const apiPOSTcart = () => {
-    console.log(props.product._id);
     productService
       .getCart(props.product._id, itemCounter)
       .then(function (data) {
-        console.log(data);
-        console.log("In Card");
-
         dispatch(increment());
       })
       .catch(function (error) {
-        console.log(" GG error agya");
         handleClick();
-        console.log(error);
       });
   };
+  const handleDel = () => {
+    productService
+      .deleteProduct(props.product._id)
+      .then(function (data) {
+        console.log(data);
+        props.setProducts(data);
+        setOpenDeleteSnack(true);
+        setmsgSnack("Deleted Successfully");
+      })
+      .catch(function (error) {
+        // handleClick();
+      });
+  };
+  // const handleEdit = () => {
+  //   productService
+  //     .editProduct(props.product._id)
+  //     .then(function (data) {
+  //       console.log(data);
+  //       props.setProducts(data);
+  //       setOpenDeleteSnack(true);
+  //       setmsgSnack("Deleted Successfully");
+  //     })
+  //     .catch(function (error) {
+  //       // handleClick();
+  //     });
+  // };
 
   return (
     <Grid item xs={12} md={6} lg={3} style={{ border: "1px solid balck" }}>
@@ -103,32 +134,55 @@ export default function RecipeReviewCard(props) {
           </Alert>
         </Snackbar>
       </div>
-      <Card className={classes.root} elevation={9}>
-        <CardHeader
-          avatar={
-            <Avatar aria-label="recipe" className={classes.avatar}>
-              R
-            </Avatar>
-          }
-          action={
-            <IconButton aria-label="settings">
-              <MoreVertIcon />
-            </IconButton>
-          }
-          title="Shrimp and Chorizo Paella"
-          subheader="September 14, 2016"
-        />
+      <SnackBar
+        open={openDeleteSnack}
+        setOpen={setOpenDeleteSnack}
+        msg={msgSnack}
+      />
+      <Card className={classes.root} elevation={4}>
+        {userService.isAdmin() ? (
+          <CardHeader
+            avatar={
+              <Fab
+                color="primary"
+                aria-label="edit"
+                onClick={() => {
+                  props.history.push("/updateproduct/" + props.product._id);
+                }}
+              >
+                <EditIcon />
+              </Fab>
+            }
+            // style={{ float: "right" }}
+            action={
+              <Fab
+                color="secondary"
+                aria-label="edit"
+                style={{ marginTop: "5px" }}
+                onClick={handleDel}
+              >
+                <DeleteOutlineIcon />
+              </Fab>
+            }
+            title=""
+            subheader="September 14, 2016"
+          />
+        ) : (
+          <></>
+        )}
+        <hr />
         <CardMedia
           className={classes.media}
           image={props.image}
           title="Paella dish"
         />
+        <hr />
         <CardContent>
-          <Typography variant="h6" color="primary" component="h1">
+          <Typography variant="h6" component="h1">
             {props.product.name}
           </Typography>
-          <Typography variant="body1" color="primary" component="h1">
-            Rs.{props.product.price}
+          <Typography variant="body1" component="h1">
+            Rs. {props.product.price}
           </Typography>
         </CardContent>
         <CardActions disableSpacing style={{ float: "right" }}>
@@ -189,4 +243,5 @@ export default function RecipeReviewCard(props) {
       </Card>
     </Grid>
   );
-}
+};
+export default withRouter(RecipeReviewCard);

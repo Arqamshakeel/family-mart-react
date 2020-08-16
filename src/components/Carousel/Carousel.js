@@ -34,6 +34,7 @@ const CustomCarousel = (props) => {
         <img
           src={require("./test.jpg")}
           style={{ width: "100%", height: isDesktopOrLaptop ? 600 : 250 }}
+          key={i}
         />
       ))}
     </Carousel>

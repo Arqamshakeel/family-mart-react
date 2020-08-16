@@ -13,7 +13,14 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import productService from "../../services/ProductServices";
-
+import userService from "../../services/UserService";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  switchLogin,
+  trueLogin,
+  falseLogin,
+} from "../../Redux/actions/LoginAction";
+import SnackBar from "../snackBar/SnackBar";
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -60,23 +67,43 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignInSide() {
+const SignInSide = () => {
+  const isLoggedInRedux = useSelector((state) => state.login.isloggedin);
+  console.log("redux is loggedin: " + isLoggedInRedux);
+  const dispatch = useDispatch();
+  const [open, setOpen] = React.useState(false);
+  const [msg, setmsg] = React.useState("");
+
   const classes = useStyles();
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  userService.isLoggedin()
+    ? console.log("Yes logged in")
+    : console.log("Not logged in");
 
   const handleLogin = () => {
-    productService
-      .UserLogin()
-      .then(function (token) {
-        console.log(token);
+    userService
+      .UserLogin({ email: email, password: password })
+      .then(function (res) {
+        console.log(res);
+        console.log("hello");
+      })
+      .then(() => {
+        userService.isLoggedin()
+          ? dispatch(trueLogin())
+          : console.log("Not logged in");
       })
       .catch(function (error) {
         console.log(error);
+        setOpen(true);
+        setmsg(error);
       });
   };
 
   return (
     <Grid container component="main" className={classes.root}>
       <CssBaseline />
+
       <Grid item xs={false} sm={4} md={7} className={classes.image} />
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
         <div className={classes.paper}>
@@ -86,18 +113,22 @@ export default function SignInSide() {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <form className={classes.form} noValidate>
+          <form className={classes.form}>
             <TextField
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+              }}
               variant="outlined"
               margin="normal"
               required
               fullWidth
-              id="email"
               label="Email Address"
               name="email"
               autoComplete="email"
               autoFocus
             />
+            <SnackBar open={open} setOpen={setOpen} msg={msg} />
             <TextField
               variant="outlined"
               margin="normal"
@@ -106,7 +137,10 @@ export default function SignInSide() {
               name="password"
               label="Password"
               type="password"
-              id="password"
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
               autoComplete="current-password"
             />
             <FormControlLabel
@@ -121,6 +155,20 @@ export default function SignInSide() {
               onClick={handleLogin}
             >
               Sign In
+            </Button>
+            <Button
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+              onClick={() => {
+                // userService.logout()
+                //   ? alert("Logout Successfull")
+                //   : alert("Already logged out");
+                // dispatch(switchLogin());
+              }}
+            >
+              logout
             </Button>
             <Grid container>
               <Grid item xs>
@@ -142,4 +190,5 @@ export default function SignInSide() {
       </Grid>
     </Grid>
   );
-}
+};
+export default SignInSide;
