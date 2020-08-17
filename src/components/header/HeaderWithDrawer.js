@@ -62,6 +62,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import CustomList from "../List/CustomList";
 import EditProducts from "../products/EditProducts";
 import UpdateProduct from "../products/UpdateProduct";
+import EmptyStockProducts from "../products/EmptyStockProducts";
 const socket = io.connect("http://localhost:4001");
 //const socket = io.connect("https://test-express-arqam.herokuapp.com:4001");
 //const socket = io.connect("https://test-express-arqam.herokuapp.com:4001");
@@ -616,6 +617,7 @@ function ResponsiveDrawer(props) {
           <Route path="/allorders" exact component={OrderExpandable} />
           <Route path="/editproduct" exact component={EditProducts} />
           <Route path="/updateproduct/:id" exact component={UpdateProduct} />
+          <Route path="/expired" exact component={EmptyStockProducts} />
         </Switch>
         {isTabletOrMobileDevice && isPortrait ? <BottomNav /> : <></>}
       </main>

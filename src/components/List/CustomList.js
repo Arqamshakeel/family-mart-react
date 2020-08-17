@@ -99,7 +99,14 @@ const CustomList = (props) => {
           </ListItem>
         </List>
         <List component="div" disablePadding>
-          <ListItem button className={classes.nested}>
+          <ListItem
+            button
+            className={classes.nested}
+            onClick={() => {
+              props.history.push("/expired");
+              if (isTabletOrMobile) props.handleDrawerToggle();
+            }}
+          >
             <ListItemIcon>
               <StarBorder />
             </ListItemIcon>
@@ -122,7 +129,14 @@ const CustomList = (props) => {
           </ListItem>
         </List>
 
-        <List component="div" disablePadding>
+        <List
+          component="div"
+          disablePadding
+          onClick={() => {
+            props.history.push("/editproduct");
+            if (isTabletOrMobile) props.handleDrawerToggle();
+          }}
+        >
           <ListItem button className={classes.nested}>
             <ListItemIcon>
               <StarBorder />
