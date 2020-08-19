@@ -1,7 +1,7 @@
 import axios from "axios";
 //axios.defaults.baseURL = "https://test-express-arqam.herokuapp.com/api/";
 //axios.defaults.baseURL = "https://test-express-arqam.herokuapp.com/api";
-axios.defaults.baseURL = "/api/";
+axios.defaults.baseURL = "http://localhost:4000/api/";
 axios.defaults.headers.common["x-auth-token"] = localStorage.getItem("token");
 axios.defaults.withCredentials = true;
 class GenericService {
