@@ -6,6 +6,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import fileUpload from "fuctbase64";
 import productService from "../../services/ProductServices";
+import CustomTags from "../chips/tags/CustomTags";
 import {
   MenuItem,
   Select,
@@ -14,9 +15,8 @@ import {
   Button,
   Paper,
 } from "@material-ui/core";
-import CustomTags from "../chips/tags/CustomTags";
 
-const UpdateProduct = (props) => {
+const AddProduct2 = (props) => {
   const [tags, settags] = React.useState("");
   const [name, setName] = React.useState("");
   const [stock, setStock] = React.useState(0);
@@ -54,41 +54,43 @@ const UpdateProduct = (props) => {
     check = 1;
   };
 
-  const apiGETsingleproduct = () => {
-    productService
-      .getsingleProduct(props.match.params.id)
-      .then(function (data) {
-        console.log(data);
-        setName(data.name);
-        setStock(data.stock);
-        setPrice(data.price);
-        //setName(data.name);
-        setProductTags(data.category);
-        setCompany(data.company);
-        setImg({ file: data.image.data });
-        setImg2(data.image.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  };
+  // const apiGETsingleproduct = () => {
+  //   productService
+  //     .getsingleProduct(props.match.params.id)
+  //     .then(function (data) {
+  //       console.log(data);
+  //       setName(data.name);
+  //       setStock(data.stock);
+  //       setPrice(data.price);
+  //       //setName(data.name);
+  //       setCompany(data.company);
+  //       setImg({ file: data.image.data });
+  //       setImg2(data.image.data);
+  //     })
+  //     .catch(function (error) {
+  //       console.log(error);
+  //     });
+  // };
   const apiPutproduct = () => {
     productService
-      .putProduct(props.match.params.id, {
+      .postProduct({
         name: name,
-        stock: stock,
         price: price,
-        company: company,
+        stock: stock,
         tags: productTags,
-
-        img: check2 ? "data:image/jpeg;base64," + imgBase64 : img2,
+        img: "data:image/jpeg;base64," + imgBase64,
+        company: company,
       })
-      .then(function (data) {})
+      .then(function (data) {
+        //setImgBuffer(data);
+        // console.log("Posted");
+        //console.log(imgBase64);
+      })
       .catch(function (error) {
         console.log(error);
       });
   };
-  React.useEffect(apiGETsingleproduct, []);
+  //React.useEffect(apiGETsingleproduct, []);
 
   return (
     <Paper style={{ margin: "30px", padding: "20px" }}>
@@ -96,7 +98,7 @@ const UpdateProduct = (props) => {
         <Grid item xs={12} md={6} lg={3}></Grid>
         <Grid item xs={12} md={6} lg={3}>
           <Typography variant="h6" gutterBottom>
-            Edit product's information
+            Add product's information
           </Typography>
           <Grid container spacing={3}>
             <Grid item xs={12} sm={6}>
@@ -143,7 +145,7 @@ const UpdateProduct = (props) => {
               <TextField
                 id="address2"
                 name="address2"
-                label="Company"
+                label="Brand"
                 fullWidth
                 value={company}
                 onChange={(e) => {
@@ -153,11 +155,11 @@ const UpdateProduct = (props) => {
               />
             </Grid>
             <Grid item xs={12}>
+              <CustomTags
+                setProductTags={setProductTags}
+                productTags={productTags}
+              ></CustomTags>
               <FormControl fullWidth>
-                <CustomTags
-                  setProductTags={setProductTags}
-                  productTags={productTags}
-                ></CustomTags>
                 {/* <InputLabel id="demo-simple-select-outlined-label">
                   Tags
                 </InputLabel>
@@ -166,7 +168,9 @@ const UpdateProduct = (props) => {
                   labelId="demo-simple-select-outlined-label"
                   id="demo-simple-select-outlined"
                   value={tags}
-                  onChange={() => {}}
+                  onChange={(e) => {
+                    settags(e.target.value);
+                  }}
                   label="Area"
                 >
                   <MenuItem value={"wapdatown"}>Snacks</MenuItem>
@@ -209,7 +213,7 @@ const UpdateProduct = (props) => {
               style={{ float: "right" }}
               onClick={apiPutproduct}
             >
-              Update?
+              Add
             </Button>
           </Grid>
           <Grid item xs={12} md={6} lg={3}></Grid>
@@ -218,4 +222,4 @@ const UpdateProduct = (props) => {
     </Paper>
   );
 };
-export default UpdateProduct;
+export default AddProduct2;

@@ -32,7 +32,7 @@ const BottomNav = (props) => {
   console.log("Botton: " + props);
   console.log(props);
   const classes = useStyles();
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = React.useState();
 
   return (
     <ThemeProvider theme={theme}>
@@ -47,7 +47,7 @@ const BottomNav = (props) => {
           className={classes.root}
         >
           <BottomNavigationAction
-            label="Recents"
+            label="Cart"
             icon={
               <Badge badgeContent={cartBadge} color="secondary">
                 <ShoppingCartIcon />
@@ -60,7 +60,7 @@ const BottomNav = (props) => {
             }}
           />
           <BottomNavigationAction
-            label="Favorites"
+            label="Home"
             icon={<HomeIcon />}
             onClick={() => {
               console.log("yessssss");
@@ -69,7 +69,7 @@ const BottomNav = (props) => {
             }}
           />
           <BottomNavigationAction
-            label="Nearby"
+            label="Orders"
             onClick={() => {
               console.log("yessssss");
 

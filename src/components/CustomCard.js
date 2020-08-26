@@ -32,8 +32,10 @@ function Alert(props) {
 const useStyles = makeStyles((theme) => ({
   root: {
     // height: "400px",
-    maxWidth: 345,
+    // maxWidth: 345,
+    // width: "100%",
     width: "100%",
+    //height: "222px",
     "& > * + *": {
       marginTop: theme.spacing(2),
     },

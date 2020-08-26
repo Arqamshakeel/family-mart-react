@@ -1,19 +1,20 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { Grid, Typography, Paper } from "@material-ui/core";
 import RecipeReviewCard from "../CustomCard";
 import { useMediaQuery } from "react-responsive";
 import CustomCarousel from "../Carousel/Carousel";
 import productService from "../../services/ProductServices";
-const EmptyStockProducts = (props) => {
+const ShowWithTags = (props) => {
   const [imgBuffer, setImgBuffer] = React.useState("");
   const [products, setProducts] = React.useState([]);
-
+  console.log(props);
   const apiGETproducts = () => {
     productService
       .getAllProducts()
       .then(function (data) {
         //   console.log(data[0].image.data);
         setProducts(data);
+        //console.log(data[2].category);
       })
       .catch(function (error) {
         console.log(error);
@@ -31,7 +32,7 @@ const EmptyStockProducts = (props) => {
               gutterBottom
               style={{ textAlign: "center" }}
             >
-              Update Stock
+              {props.match.params.name}
             </Typography>
           </Paper>
         </Grid>
@@ -39,21 +40,29 @@ const EmptyStockProducts = (props) => {
       </Grid>
       <Grid container spacing={1} align="center" justify="center">
         {products.map((product, index) => {
-          return product.stock == 0 ? (
-            <RecipeReviewCard
-              badge={props.badge}
-              setbadge={props.setbadge}
-              key={index}
-              image={product.image.data}
-              stock={product.stock}
-              product={product}
-            ></RecipeReviewCard>
-          ) : (
-            <span key={index}></span>
+          return (
+            <Fragment key={index}>
+              {product.category.map((cat, i) => {
+                {
+                  return cat == props.match.params.name ? (
+                    <RecipeReviewCard
+                      badge={props.badge}
+                      setbadge={props.setbadge}
+                      key={i}
+                      image={product.image.data}
+                      stock={product.stock}
+                      product={product}
+                    ></RecipeReviewCard>
+                  ) : (
+                    <Fragment key={i}></Fragment>
+                  );
+                }
+              })}
+            </Fragment>
           );
         })}
       </Grid>
     </div>
   );
 };
-export default EmptyStockProducts;
+export default ShowWithTags;

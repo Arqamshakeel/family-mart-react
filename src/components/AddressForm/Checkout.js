@@ -1,8 +1,8 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
+//import AppBar from "@material-ui/core/AppBar";
+//import Toolbar from "@material-ui/core/Toolbar";
 import Paper from "@material-ui/core/Paper";
 import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
@@ -16,9 +16,18 @@ import Review from "./Review";
 import { Snackbar } from "@material-ui/core";
 import MuiAlert from "@material-ui/lab/Alert";
 import productService from "../../services/ProductServices";
-import axios from "axios";
+//import axios from "axios";
 import io from "socket.io-client";
 const socket = io.connect("http://localhost:4001");
+// const socket = io.connect(
+//   "http://ec2-18-221-158-145.us-east-2.compute.amazonaws.com:4001"
+// );
+// const socket = io.connect(
+//   "http://ec2-18-221-158-145.us-east-2.compute.amazonaws.com:8080"
+// );
+// const socket = io.connect(
+//   "http://ec2-18-221-158-145.us-east-2.compute.amazonaws.com:5000"
+// );
 //const socket = io.connect("https://test-express-arqam.herokuapp.com:4001");
 //const socket = io.connect("https://test-express-arqam.herokuapp.com:4001");
 function Alert(props) {

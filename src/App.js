@@ -12,6 +12,7 @@ import AppBarOnly from "./components/header/AppBarOnly";
 import { Route, BrowserRouter, Switch } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
 import { Paper, ThemeProvider, createMuiTheme } from "@material-ui/core";
+import Footer from "./components/footer/Footer";
 
 function App() {
   const [dark, setDark] = React.useState(false);

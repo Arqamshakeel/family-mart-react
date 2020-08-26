@@ -6,19 +6,19 @@ import Divider from "@material-ui/core/Divider";
 import Drawer from "@material-ui/core/Drawer";
 import Hidden from "@material-ui/core/Hidden";
 import IconButton from "@material-ui/core/IconButton";
-import InboxIcon from "@material-ui/icons/MoveToInbox";
+//import InboxIcon from "@material-ui/icons/MoveToInbox";
 import MessageIcon from "@material-ui/icons/Message";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import MailIcon from "@material-ui/icons/Mail";
+//import MailIcon from "@material-ui/icons/Mail";
 import Badge from "@material-ui/core/Badge";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import MenuIcon from "@material-ui/icons/Menu";
 import Toolbar from "@material-ui/core/Toolbar";
-import NotificationsIcon from "@material-ui/icons/Notifications";
+//import NotificationsIcon from "@material-ui/icons/Notifications";
 import SearchIcon from "@material-ui/icons/Search";
 import InputBase from "@material-ui/core/InputBase";
 import { useMediaQuery } from "react-responsive";
@@ -28,10 +28,11 @@ import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import { makeStyles, useTheme, fade } from "@material-ui/core/styles";
 import { BrowserRouter, Switch, Route, Link } from "react-router-dom";
 import Home from "../home/Home";
-import CustomCarousel from "../Carousel/Carousel";
+//import CustomCarousel from "../Carousel/Carousel";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import FormOrder from "../order/FormOrder";
 import AddProduct from "../products/AddProduct";
+import AddProduct2 from "../products/AddProduct2";
 import AddProductForm from "../products/AddProductForm";
 import Cart from "../cart/Cart";
 import MaterialTableDemo from "../cart/Cart2";
@@ -40,18 +41,18 @@ import { withRouter } from "react-router";
 import HomeIcon from "@material-ui/icons/Home";
 import AddIcon from "@material-ui/icons/Add";
 import { useSelector, useDispatch } from "react-redux";
-import { decrement, zero } from "../../Redux/actions/CartBadgeAction";
+//import { decrement, zero } from "../../Redux/actions/CartBadgeAction";
 import { set } from "../../Redux/actions/CartBadgeAction";
 import { setOrder, incrementOrder } from "../../Redux/actions/OrderBadgeAction";
-import AddressForm from "../AddressForm/AddressForm";
+//import AddressForm from "../AddressForm/AddressForm";
 import Checkout from "../AddressForm/Checkout";
 import SignInSide from "../LoginAndSignUp/SignInSide";
 import SignUp from "../LoginAndSignUp/SignUp";
 import Brightness4Icon from "@material-ui/icons/Brightness4";
 import io from "socket.io-client";
-import TestRes from "../testResponsive/TestRes";
+//import TestRes from "../testResponsive/TestRes";
 import BottomNav from "../Bottom navigation/BottomNav";
-import Order from "../order/Order";
+//import Order from "../order/Order";
 import OrderExpandable from "../order/OrderExpandable";
 import addNotification from "react-push-notification";
 import { Button, Avatar } from "@material-ui/core";
@@ -63,7 +64,17 @@ import CustomList from "../List/CustomList";
 import EditProducts from "../products/EditProducts";
 import UpdateProduct from "../products/UpdateProduct";
 import EmptyStockProducts from "../products/EmptyStockProducts";
+import ProductCategory from "../List/ProductCategory";
+import ShowWithTags from "../products/ShowWithTags";
+import Footer from "../footer/Footer";
 const socket = io.connect("http://localhost:4001");
+// const socket = io.connect(
+//   "http://ec2-18-221-158-145.us-east-2.compute.amazonaws.com:8080"
+// );
+// const socket = io.connect(
+//   "http://ec2-18-221-158-145.us-east-2.compute.amazonaws.com:5000"
+// );
+//ec2-18-221-158-145.us-east-2.compute.amazonaws.com:5000/api/
 //const socket = io.connect("https://test-express-arqam.herokuapp.com:4001");
 //const socket = io.connect("https://test-express-arqam.herokuapp.com:4001");
 
@@ -413,6 +424,10 @@ function ResponsiveDrawer(props) {
           isTabletOrMobile={isTabletOrMobile}
           handleDrawerToggle={handleDrawerToggle}
         />
+        <ProductCategory
+          isTabletOrMobile={isTabletOrMobile}
+          handleDrawerToggle={handleDrawerToggle}
+        />
       </List>
     </div>
   );
@@ -609,16 +624,19 @@ function ResponsiveDrawer(props) {
           <Route path="/orderform" exact component={FormOrder} />
           <Route path="/orderform2" exact component={Checkout} />
           <Route path="/addproduct" exact component={AddProduct} />
-          <Route path="/addproductform" exact component={AddProductForm} />
+          <Route path="/addproductform" exact component={AddProduct2} />
+          <Route path="/addproductform2" exact component={AddProductForm} />
           <Route path="/cart" exact component={Cart} />
           <Route path="/cart2" exact component={MaterialTableDemo} />
           <Route path="/signin" exact component={SignInSide} />
           <Route path="/signup" exact component={SignUp} />
           <Route path="/allorders" exact component={OrderExpandable} />
           <Route path="/editproduct" exact component={EditProducts} />
+          <Route path="/tags/:name" exact component={ShowWithTags} />
           <Route path="/updateproduct/:id" exact component={UpdateProduct} />
           <Route path="/expired" exact component={EmptyStockProducts} />
         </Switch>
+        <Footer />
         {isTabletOrMobileDevice && isPortrait ? <BottomNav /> : <></>}
       </main>
     </div>

@@ -8,18 +8,11 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import productService from "../../services/ProductServices";
-import { Grid, IconButton, Badge, Typography } from "@material-ui/core";
-import { Checkbox } from "@material-ui/core";
+import { Grid, IconButton } from "@material-ui/core";
+//import { Checkbox } from "@material-ui/core";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
-import { useSelector, useDispatch } from "react-redux";
-import {
-  increment,
-  decrement,
-  zero,
-  set,
-} from "../../Redux/actions/CartBadgeAction";
-
-const TAX_RATE = 0.07;
+import { useDispatch } from "react-redux";
+import { set } from "../../Redux/actions/CartBadgeAction";
 
 const useStyles = makeStyles({
   table: {

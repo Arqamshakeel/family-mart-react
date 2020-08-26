@@ -25,8 +25,8 @@ function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {"Copyright © "}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
+      <Link color="inherit" href="https://www.instagram.com/arqamshakeel/">
+        Family Mart made by Arqam Shakeel.
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
@@ -156,25 +156,12 @@ const SignInSide = () => {
             >
               Sign In
             </Button>
-            <Button
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-              onClick={() => {
-                // userService.logout()
-                //   ? alert("Logout Successfull")
-                //   : alert("Already logged out");
-                // dispatch(switchLogin());
-              }}
-            >
-              logout
-            </Button>
+
             <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2">
+                {/* <Link href="#" variant="body2">
                   Forgot password?
-                </Link>
+                </Link> */}
               </Grid>
               <Grid item>
                 <Link href="#" variant="body2">
