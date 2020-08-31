@@ -69,7 +69,7 @@ const RecipeReviewCard = (props) => {
   //   return String.fromCharCode.apply(null, new Uint16Array(buf));
   // }
   //const cartBadge = useSelector((state) => console.log(state.counter));
-
+  //console.log(props.product.image.data);
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
   const [imgBuffer, setImgBuffer] = React.useState("");

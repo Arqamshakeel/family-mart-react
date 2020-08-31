@@ -55,7 +55,7 @@ import BottomNav from "../Bottom navigation/BottomNav";
 //import Order from "../order/Order";
 import OrderExpandable from "../order/OrderExpandable";
 import addNotification from "react-push-notification";
-import { Button, Avatar } from "@material-ui/core";
+import { Button, Avatar, InputAdornment } from "@material-ui/core";
 import userService from "../../services/UserService";
 import { switchLogin, falseLogin } from "../../Redux/actions/LoginAction";
 import { red } from "@material-ui/core/colors";
@@ -67,10 +67,14 @@ import EmptyStockProducts from "../products/EmptyStockProducts";
 import ProductCategory from "../List/ProductCategory";
 import ShowWithTags from "../products/ShowWithTags";
 import Footer from "../footer/Footer";
-//const socket = io.connect("http://localhost:4001");
-const socket = io.connect(
-  "http://ec2-18-224-94-239.us-east-2.compute.amazonaws.com:4001"
-);
+import Push from "push.js";
+import TextField from "@material-ui/core/TextField";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import ShowWithSearch from "../products/ShowWithSearch";
+const socket = io.connect("http://localhost:4001");
+// const socket = io.connect(
+//   "http://ec2-18-224-94-239.us-east-2.compute.amazonaws.com:4001"
+// );
 // const socket = io.connect(
 //   "http://ec2-18-221-158-145.us-east-2.compute.amazonaws.com:8080"
 // );
@@ -81,7 +85,7 @@ const socket = io.connect(
 //const socket = io.connect("https://test-express-arqam.herokuapp.com:4001");
 //const socket = io.connect("https://test-express-arqam.herokuapp.com:4001");
 
-const drawerWidth = 240;
+const drawerWidth = 205;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -164,7 +168,7 @@ const useStyles = makeStyles((theme) => ({
     transition: theme.transitions.create("width"),
     width: "100%",
     [theme.breakpoints.up("md")]: {
-      width: "20ch",
+      width: "36ch",
       "&:focus": {
         width: "26ch",
       },
@@ -200,7 +204,6 @@ function ResponsiveDrawer(props) {
   const isPortrait = useMediaQuery({ query: "(orientation: portrait)" });
   const isRetina = useMediaQuery({ query: "(min-resolution: 2dppx)" });
 
-  console.log(props);
   const { window } = props;
 
   const theme = useTheme();
@@ -211,7 +214,8 @@ function ResponsiveDrawer(props) {
   const cartBadge = useSelector((state) => state.counter.counter);
   const orderBadge = useSelector((state) => state.order.order);
   const isMenuOpen = Boolean(anchorEl);
-  const [value, setValue] = React.useState(0);
+  const [searchTextField, setSearchTextField] = React.useState("");
+  const [top100Films, setTop100Films] = React.useState([]);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const isLoggedInRedux = useSelector((state) => state.login.isloggedin);
@@ -230,24 +234,27 @@ function ResponsiveDrawer(props) {
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
-  const buttonClick = () => {
-    console.log("Notification");
-    addNotification({
-      title: "Family Mart",
-      subtitle: "This is a subtitle",
-      message: "New Order",
-      // theme: "darkblue",
-      native: true, // when using native, your OS will handle theming.
-    });
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      props.history.push("/search/" + searchTextField);
+    }
   };
+  // const buttonClick = () => {
+  //   console.log("Notification");
+  //   addNotification({
+  //     title: "Family Mart",
+  //     subtitle: "This is a subtitle",
+  //     message: "New Order",
+  //     // theme: "darkblue",
+  //     native: true, // when using native, your OS will handle theming.
+  //   });
+  // };
 
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
   if (isTabletOrMobile) {
-    console.log("Yes Mob");
   } else {
-    console.log("not des");
   }
   const classes = useStyles(isTabletOrMobile);
 
@@ -279,7 +286,19 @@ function ResponsiveDrawer(props) {
     socket.on("client", (data) => {
       dispatch(incrementOrder());
 
-      if (userService.isAdmin()) buttonClick();
+      //if (userService.isAdmin()) buttonClick();
+      //Pus
+      if (userService.isAdmin())
+        Push.create("Family Mart", {
+          body: "You got new order!",
+          icon: "/icon.png",
+          requireInteraction: true,
+          //timeout: 5000,
+          onClick: function () {
+            window.focus();
+            this.close();
+          },
+        });
       // dispatch(incrementOrder());
     });
   }, []);
@@ -287,6 +306,11 @@ function ResponsiveDrawer(props) {
     if (userService.isLoggedin()) {
       dispatch(switchLogin());
     }
+  }, []);
+  React.useEffect(() => {
+    productService.getProductsname().then((res) => {
+      setTop100Films(res);
+    });
   }, []);
 
   const menuId = "primary-search-account-menu";
@@ -459,14 +483,42 @@ function ResponsiveDrawer(props) {
             <div className={classes.searchIcon}>
               <SearchIcon />
             </div>
-            <InputBase
+            <Autocomplete
+              className={classes.inputInput}
+              options={top100Films}
+              getOptionLabel={(option) => option.name}
+              onInputChange={(event, value) => {
+                setSearchTextField(value);
+              }}
+              renderInput={(params) => (
+                <TextField
+                  onChange={(e) => {
+                    setSearchTextField(e.target.value);
+                  }}
+                  value={searchTextField}
+                  onKeyDown={handleKeyDown}
+                  placeholder="Search…"
+                  {...params}
+                  renderInput={(params) => (
+                    <InputBase
+                      placeholder="Search…"
+                      ref={params.ref}
+                      ref={params.InputProps.ref}
+                      inputProps={params.inputProps}
+                      inputProps={{ "aria-label": "search" }}
+                    />
+                  )}
+                />
+              )}
+            />
+            {/* <InputBase
               placeholder="Search…"
               classes={{
                 root: classes.inputRoot,
                 input: classes.inputInput,
               }}
               inputProps={{ "aria-label": "search" }}
-            />
+            ></InputBase> */}
           </div>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
@@ -636,6 +688,7 @@ function ResponsiveDrawer(props) {
           <Route path="/allorders" exact component={OrderExpandable} />
           <Route path="/editproduct" exact component={EditProducts} />
           <Route path="/tags/:name" exact component={ShowWithTags} />
+          <Route path="/search/:name" exact component={ShowWithSearch} />
           <Route path="/updateproduct/:id" exact component={UpdateProduct} />
           <Route path="/expired" exact component={EmptyStockProducts} />
         </Switch>

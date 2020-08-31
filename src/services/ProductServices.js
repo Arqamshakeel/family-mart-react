@@ -17,6 +17,8 @@ class ProductServices extends GenericService {
   UserLogin = (data) => this.post("users/login", data);
   UserReg = (data) => this.post("users/register", data);
   getsingleProduct = (_id) => this.get("products/single/" + _id);
+  getsingleProductByName = (name) => this.get("products/singlename/" + name);
+  getProductsname = () => this.get("products/name");
   putProduct = (_id, data) => this.put("products/put/" + _id, data);
 }
 

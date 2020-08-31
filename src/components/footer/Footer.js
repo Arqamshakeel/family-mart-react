@@ -8,12 +8,13 @@ import Link from "@material-ui/core/Link";
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
-      <hr />
       <Link color="inherit" href="https://www.instagram.com/arqamshakeel/">
-        <div>
+        <span>
           {"Copyright © "} Family Mart {new Date().getFullYear()}
-        </div>
-        <div>Main Market, Wapda Town, Gujranwala</div>
+        </span>
+        <br />
+        <span>Main Market, Wapda Town, Gujranwala</span>
+        <br />
       </Link>{" "}
       <Link color="inherit" href="https://www.instagram.com/arqamshakeel/">
         Developer: Arqam Shakeel.

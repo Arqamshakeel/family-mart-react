@@ -33,7 +33,7 @@ const CustomCarousel = (props) => {
       {items.map((item, i) => (
         <img
           src={require("./test.jpg")}
-          style={{ width: "100%", height: isDesktopOrLaptop ? 600 : 250 }}
+          style={{ width: "100%", height: isDesktopOrLaptop ? 450 : 250 }}
           key={i}
         />
       ))}

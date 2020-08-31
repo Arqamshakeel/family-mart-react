@@ -29,8 +29,8 @@ const BottomNav = (props) => {
       type: "dark",
     },
   });
-  console.log("Botton: " + props);
-  console.log(props);
+  //console.log("Botton: " + props);
+  //console.log(props);
   const classes = useStyles();
   const [value, setValue] = React.useState();
 
@@ -54,7 +54,7 @@ const BottomNav = (props) => {
               </Badge>
             }
             onClick={() => {
-              console.log("yessssss");
+              //console.log("yessssss");
 
               props.history.push("/cart");
             }}
@@ -63,7 +63,7 @@ const BottomNav = (props) => {
             label="Home"
             icon={<HomeIcon />}
             onClick={() => {
-              console.log("yessssss");
+              //console.log("yessssss");
 
               props.history.push("/");
             }}
@@ -71,7 +71,7 @@ const BottomNav = (props) => {
           <BottomNavigationAction
             label="Orders"
             onClick={() => {
-              console.log("yessssss");
+              //console.log("yessssss");
 
               props.history.push("/allorders");
             }}
