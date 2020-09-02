@@ -13,6 +13,7 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 //import MailIcon from "@material-ui/icons/Mail";
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import Badge from "@material-ui/core/Badge";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -57,6 +58,7 @@ import OrderExpandable from "../order/OrderExpandable";
 import addNotification from "react-push-notification";
 import { Button, Avatar, InputAdornment } from "@material-ui/core";
 import userService from "../../services/UserService";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import { switchLogin, falseLogin } from "../../Redux/actions/LoginAction";
 import { red } from "@material-ui/core/colors";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -342,6 +344,7 @@ function ResponsiveDrawer(props) {
       <MenuItem
         onClick={() => {
           props.history.push("/cart");
+          handleMobileMenuClose();
         }}
       >
         <IconButton aria-label="show 4 new mails" color="inherit">
@@ -351,28 +354,67 @@ function ResponsiveDrawer(props) {
         </IconButton>
         <p>Cart</p>
       </MenuItem>
+      <Divider />
+
+      {userService.isLoggedin() ? (
+        <MenuItem
+          onClick={() => {
+            //props.history.push("/signup");
+            userService.logout();
+            dispatch(falseLogin());
+            handleMobileMenuClose();
+          }}
+        >
+          <IconButton aria-label="show 4 new mails" color="inherit">
+            <Badge color="secondary">
+              <ExitToAppIcon />
+            </Badge>
+          </IconButton>
+          <p>Sign out</p>
+        </MenuItem>
+      ) : (
+        <MenuItem
+          onClick={() => {
+            props.history.push("/signin");
+            handleMobileMenuClose();
+          }}
+        >
+          <IconButton aria-label="show 4 new mails" color="inherit">
+            <Badge badgeContent={cartBadge} color="secondary">
+              <AccountCircleIcon />
+            </Badge>
+          </IconButton>
+          <p>Sign in</p>
+        </MenuItem>
+      )}
+      <Divider />
+      <MenuItem
+        onClick={() => {
+          props.history.push("/signup");
+          handleMobileMenuClose();
+        }}
+      >
+        <IconButton aria-label="show 4 new mails" color="inherit">
+          <Badge color="secondary">
+            <AccountCircleIcon />
+          </Badge>
+        </IconButton>
+        <p>Register</p>
+      </MenuItem>
+
+      <Divider />
       <MenuItem
         onClick={() => {
           props.history.push("/allorders");
+          handleMobileMenuClose();
         }}
       >
         <IconButton aria-label="show 11 new notifications" color="inherit">
-          <Badge badgeContent={11} color="secondary">
+          <Badge badgeContent={orderBadge} color="secondary">
             <MessageIcon />
           </Badge>
         </IconButton>
-        <p>Notifications</p>
-      </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <AccountCircle />
-        </IconButton>
-        <p>Profile</p>
+        <p>Orders</p>
       </MenuItem>
     </Menu>
   );

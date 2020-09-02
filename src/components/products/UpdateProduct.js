@@ -7,6 +7,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import fileUpload from "fuctbase64";
 import productService from "../../services/ProductServices";
 import CustomBackdrop from "../backdrop/CustomBackdrop";
+import CheckAdmin from "../../auth/CheckAdmin";
 import {
   MenuItem,
   Select,
