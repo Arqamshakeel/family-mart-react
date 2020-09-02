@@ -77,6 +77,7 @@ const RecipeReviewCard = (props) => {
   const [openErrorSnack, setOpenErrorSnack] = React.useState(false);
   const [openDeleteSnack, setOpenDeleteSnack] = React.useState(false);
   const [msgSnack, setmsgSnack] = React.useState("");
+
   const handleClick = () => {
     setOpenErrorSnack(true);
   };
@@ -100,6 +101,8 @@ const RecipeReviewCard = (props) => {
     productService
       .deleteProduct(props.product._id)
       .then(function (data) {
+        setOpenDeleteSnack(true);
+        props.setDeleted(true);
         console.log(data);
         props.setProducts(data);
         setOpenDeleteSnack(true);
@@ -124,7 +127,7 @@ const RecipeReviewCard = (props) => {
   // };
 
   return (
-    <Grid item xs={12} md={6} lg={3} style={{ border: "1px solid balck" }}>
+    <Grid item xs={12} md={4} lg={3} style={{ border: "1px solid balck" }}>
       <div className={classes.root}>
         <Snackbar
           open={openErrorSnack}
@@ -187,32 +190,33 @@ const RecipeReviewCard = (props) => {
             Rs. {props.product.price}
           </Typography>
         </CardContent>
-        <CardActions disableSpacing style={{ float: "right" }}>
-          {/* <span>{props.stock}</span> */}
-          {props.stock == 0 ? (
-            <Typography
-              variant="body2"
-              component="p"
-              style={{ marginRight: "10px" }}
-              color="error"
-            >
-              OUT OF STOCK
-            </Typography>
-          ) : (
-            <Typography
-              variant="body2"
-              component="p"
-              style={{ marginRight: "10px" }}
-              color="primary"
-            >
-              IN STOCK
-              <span> </span>
-              {/* <IncrementDecrement
+        {props.stock == 0 ? (
+          <Typography
+            variant="body2"
+            component="p"
+            style={{ marginRight: "10px" }}
+            color="error"
+          >
+            OUT OF STOCK
+          </Typography>
+        ) : (
+          <Typography
+            variant="body2"
+            component="p"
+            style={{ marginRight: "10px" }}
+            color="primary"
+          >
+            IN STOCK
+            <span> </span>
+            {/* <IncrementDecrement
                 setItemCounter={setItemCounter}
                 itemCounter={itemCounter}
               /> */}
-            </Typography>
-          )}
+          </Typography>
+        )}
+        <CardActions disableSpacing style={{ float: "right" }}>
+          {/* <span>{props.stock}</span> */}
+
           {props.stock ? (
             <IncrementDecrement
               setItemCounter={setItemCounter}

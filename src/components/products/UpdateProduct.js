@@ -6,6 +6,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import fileUpload from "fuctbase64";
 import productService from "../../services/ProductServices";
+import CustomBackdrop from "../backdrop/CustomBackdrop";
 import {
   MenuItem,
   Select,
@@ -25,7 +26,7 @@ const UpdateProduct = (props) => {
   const [company, setCompany] = React.useState("");
   const [check2, setCheck2] = React.useState(false);
   const [productTags, setProductTags] = React.useState([]);
-
+  const [loginProgress, setLoginProgress] = React.useState(false);
   const [img, setImg] = React.useState({
     file: "",
   });
@@ -55,9 +56,11 @@ const UpdateProduct = (props) => {
   };
 
   const apiGETsingleproduct = () => {
+    setLoginProgress(true);
     productService
       .getsingleProduct(props.match.params.id)
       .then(function (data) {
+        setLoginProgress(false);
         console.log(data);
         setName(data.name);
         setStock(data.stock);
@@ -69,10 +72,12 @@ const UpdateProduct = (props) => {
         setImg2(data.image.data);
       })
       .catch(function (error) {
+        setLoginProgress(false);
         console.log(error);
       });
   };
   const apiPutproduct = () => {
+    setLoginProgress(true);
     productService
       .putProduct(props.match.params.id, {
         name: name,
@@ -83,82 +88,92 @@ const UpdateProduct = (props) => {
 
         img: check2 ? "data:image/jpeg;base64," + imgBase64 : img2,
       })
-      .then(function (data) {})
+      .then(function (data) {
+        setLoginProgress(false);
+        setName("");
+        setPrice(0);
+        setStock(0);
+        setProductTags([]);
+        setImg({ file: "" });
+        setCompany("");
+      })
       .catch(function (error) {
+        setLoginProgress(false);
         console.log(error);
       });
   };
   React.useEffect(apiGETsingleproduct, []);
 
   return (
-    <Paper style={{ margin: "30px", padding: "20px" }}>
-      <Grid container align="center" justify="center">
-        <Grid item xs={12} md={6} lg={3}></Grid>
-        <Grid item xs={12} md={6} lg={3}>
-          <Typography variant="h6" gutterBottom>
-            Edit product's information
-          </Typography>
-          <Grid container spacing={3}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                required
-                id="firstName"
-                name="firstName"
-                label="Product name"
-                value={name}
-                onChange={(e) => {
-                  setName(e.target.value);
-                }}
-                fullWidth
-                autoComplete="given-name"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                required
-                type="number"
-                label="Stock"
-                fullWidth
-                value={stock}
-                onChange={(e) => {
-                  setStock(e.target.value);
-                }}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                id="address2"
-                name="address2"
-                type="number"
-                label="Price"
-                fullWidth
-                value={price}
-                onChange={(e) => {
-                  setPrice(e.target.value);
-                }}
-                autoComplete="shipping cc-number"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                id="address2"
-                name="address2"
-                label="Company"
-                fullWidth
-                value={company}
-                onChange={(e) => {
-                  setCompany(e.target.value);
-                }}
-                autoComplete="shipping cc-number"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <FormControl fullWidth>
-                <CustomTags
-                  setProductTags={setProductTags}
-                  productTags={productTags}
-                ></CustomTags>
-                {/* <InputLabel id="demo-simple-select-outlined-label">
+    <CheckAdmin>
+      <Paper style={{ margin: "30px", padding: "20px" }}>
+        <Grid container align="center" justify="center">
+          <Grid item xs={12} md={6} lg={3}></Grid>
+          <Grid item xs={12} md={6} lg={3}>
+            <Typography variant="h6" gutterBottom>
+              Edit product's information
+            </Typography>
+            <Grid container spacing={3}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  required
+                  id="firstName"
+                  name="firstName"
+                  label="Product name"
+                  value={name}
+                  onChange={(e) => {
+                    setName(e.target.value);
+                  }}
+                  fullWidth
+                  autoComplete="given-name"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  required
+                  type="number"
+                  label="Stock"
+                  fullWidth
+                  value={stock}
+                  onChange={(e) => {
+                    setStock(e.target.value);
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  id="address2"
+                  name="address2"
+                  type="number"
+                  label="Price"
+                  fullWidth
+                  value={price}
+                  onChange={(e) => {
+                    setPrice(e.target.value);
+                  }}
+                  autoComplete="shipping cc-number"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  id="address2"
+                  name="address2"
+                  label="Company"
+                  fullWidth
+                  value={company}
+                  onChange={(e) => {
+                    setCompany(e.target.value);
+                  }}
+                  autoComplete="shipping cc-number"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <FormControl fullWidth>
+                  <CustomTags
+                    setProductTags={setProductTags}
+                    productTags={productTags}
+                  ></CustomTags>
+                  {/* <InputLabel id="demo-simple-select-outlined-label">
                   Tags
                 </InputLabel>
                 <Select
@@ -173,49 +188,51 @@ const UpdateProduct = (props) => {
                   <MenuItem value={"citi"}>Drinks</MenuItem>
                   <MenuItem value={"canal"}>Chocolates</MenuItem>
                 </Select> */}
-                <Button
-                  style={{ marginTop: "10px" }}
-                  variant="contained"
-                  component="label"
-                  //   className={classes.TextFieldMarginTop}
-                >
-                  Upload Picture
-                  <input
-                    type="file"
-                    style={{ display: "none" }}
-                    accept="image/*"
-                    onChange={(event) => {
-                      handleImage(event);
-                    }}
-                  />
-                </Button>
-              </FormControl>
-              <br />
-              <br />
+                  <Button
+                    style={{ marginTop: "10px" }}
+                    variant="contained"
+                    component="label"
+                    //   className={classes.TextFieldMarginTop}
+                  >
+                    Upload Picture
+                    <input
+                      type="file"
+                      style={{ display: "none" }}
+                      accept="image/*"
+                      onChange={(event) => {
+                        handleImage(event);
+                      }}
+                    />
+                  </Button>
+                </FormControl>
+                <br />
+                <br />
 
-              <img src={img.file} alt="" width="350px" />
+                <img src={img.file} alt="" width="350px" />
+              </Grid>
+
+              <Grid item xs={12}></Grid>
             </Grid>
-
-            <Grid item xs={12}></Grid>
-          </Grid>
-        </Grid>
-        <Grid item xs={12} md={6} lg={3}></Grid>
-        <Grid container align="center" justify="center">
-          <Grid item xs={12} md={6} lg={3}></Grid>
-          <Grid item xs={12} md={6} lg={3}>
-            <Button
-              variant="contained"
-              color="primary"
-              style={{ float: "right" }}
-              onClick={apiPutproduct}
-            >
-              Update?
-            </Button>
           </Grid>
           <Grid item xs={12} md={6} lg={3}></Grid>
+          <Grid container align="center" justify="center">
+            <Grid item xs={12} md={6} lg={3}></Grid>
+            <Grid item xs={12} md={6} lg={3}>
+              <Button
+                variant="contained"
+                color="primary"
+                style={{ float: "right" }}
+                onClick={apiPutproduct}
+              >
+                Update?
+              </Button>
+            </Grid>
+            <Grid item xs={12} md={6} lg={3}></Grid>
+          </Grid>
         </Grid>
-      </Grid>
-    </Paper>
+        <CustomBackdrop open={loginProgress} setOpen={setLoginProgress} />
+      </Paper>
+    </CheckAdmin>
   );
 };
 export default UpdateProduct;

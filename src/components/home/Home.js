@@ -5,9 +5,12 @@ import { useMediaQuery } from "react-responsive";
 import CustomCarousel from "../Carousel/Carousel";
 import productService from "../../services/ProductServices";
 import Skeleton from "@material-ui/lab/Skeleton";
+import Pagination from "@material-ui/lab/Pagination";
 const Home = (props) => {
   const [imgBuffer, setImgBuffer] = React.useState("");
   const [products, setProducts] = React.useState([]);
+  const [page, setPage] = React.useState(0);
+  const [deleted, setDeleted] = React.useState(false);
   let skel = 10;
   const apiGETproducts = () => {
     productService
@@ -15,13 +18,14 @@ const Home = (props) => {
       .then(function (data) {
         //   console.log(data[0].image.data);
         setProducts(data);
+        setDeleted(false);
         //props.setbadge("12");
       })
       .catch(function (error) {
         console.log(error);
       });
   };
-  React.useEffect(apiGETproducts, []);
+  React.useEffect(apiGETproducts, [deleted]);
   return (
     <div>
       <CustomCarousel></CustomCarousel>
@@ -38,6 +42,7 @@ const Home = (props) => {
                   stock={product.stock}
                   product={product}
                   setProducts={setProducts}
+                  setDeleted={setDeleted}
                 ></RecipeReviewCard>
               );
             })
@@ -50,6 +55,23 @@ const Home = (props) => {
                 </div>
               );
             })}
+      </Grid>
+
+      <Grid container style={{ marginTop: "25px" }}>
+        <Grid item xs={12} md={4} lg={4}></Grid>
+        <Grid item xs={12} md={3} lg={3}></Grid>
+        <Grid item xs={12} md={5} lg={5}>
+          <Pagination
+            onChange={(e, value) => {
+              setPage(value);
+            }}
+            value={page}
+            size="large"
+            style={{ float: "right" }}
+            count={10}
+            color="secondary"
+          />
+        </Grid>
       </Grid>
     </div>
   );

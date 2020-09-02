@@ -165,6 +165,16 @@ export default function Checkout() {
       apiPOSTcart();
     }
   };
+  function formatAMPM(date) {
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    var ampm = hours >= 12 ? "pm" : "am";
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+    var strTime = hours + ":" + minutes + " " + ampm;
+    return strTime;
+  }
   const apiPOSTcart = () => {
     //console.log(props.product._id);
     productService
@@ -174,6 +184,13 @@ export default function Checkout() {
         lname: lname,
         address1: address1,
         address2: address2,
+        time: formatAMPM(new Date()),
+        date:
+          new Date().getDate() +
+          "/" +
+          new Date().getMonth() +
+          "/" +
+          new Date().getFullYear(),
       })
       .then(function (res) {
         console.log(res);

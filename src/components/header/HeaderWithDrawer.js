@@ -395,19 +395,7 @@ function ResponsiveDrawer(props) {
           <ListItemText primary={"Home"} />
         </ListItem>
         <Divider />
-        <ListItem
-          button
-          onClick={() => {
-            props.history.push("/addproductform");
-            if (isTabletOrMobile) handleDrawerToggle();
-          }}
-        >
-          <ListItemIcon>
-            <AddIcon />
-          </ListItemIcon>
-          <ListItemText primary={"Add Product"} />
-        </ListItem>
-        <Divider />
+
         <ListItem
           button
           onClick={() => {
@@ -447,10 +435,14 @@ function ResponsiveDrawer(props) {
           <ListItemText primary={"Sign up"} />
         </ListItem>
         <Divider />
-        <CustomList
-          isTabletOrMobile={isTabletOrMobile}
-          handleDrawerToggle={handleDrawerToggle}
-        />
+        {userService.isAdmin() ? (
+          <CustomList
+            isTabletOrMobile={isTabletOrMobile}
+            handleDrawerToggle={handleDrawerToggle}
+          />
+        ) : (
+          <></>
+        )}
         <ProductCategory
           isTabletOrMobile={isTabletOrMobile}
           handleDrawerToggle={handleDrawerToggle}
@@ -540,6 +532,7 @@ function ResponsiveDrawer(props) {
             ) : (
               <div>
                 <Button
+                  size="small"
                   variant="contained"
                   color="secondary"
                   onClick={() => {
@@ -551,6 +544,7 @@ function ResponsiveDrawer(props) {
                   </Typography>
                 </Button>
                 <Button
+                  size="small"
                   onClick={() => {
                     props.history.push("/signup");
                   }}
@@ -678,9 +672,10 @@ function ResponsiveDrawer(props) {
           <Route path="/" exact component={Home} />
           <Route path="/orderform" exact component={FormOrder} />
           <Route path="/orderform2" exact component={Checkout} />
-          <Route path="/addproduct" exact component={AddProduct} />
+          {/* <Route path="/addproduct" exact component={AddProduct} /> */}
           <Route path="/addproductform" exact component={AddProduct2} />
-          <Route path="/addproductform2" exact component={AddProductForm} />
+          {/* first from */}
+          {/* <Route path="/addproductform2" exact component={AddProductForm} /> */}
           <Route path="/cart" exact component={Cart} />
           <Route path="/cart2" exact component={MaterialTableDemo} />
           <Route path="/signin" exact component={SignInSide} />

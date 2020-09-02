@@ -4,22 +4,24 @@ import RecipeReviewCard from "../CustomCard";
 import { useMediaQuery } from "react-responsive";
 import CustomCarousel from "../Carousel/Carousel";
 import productService from "../../services/ProductServices";
+import CheckAdmin from "../../auth/CheckAdmin";
 const EditProducts = (props) => {
   const [imgBuffer, setImgBuffer] = React.useState("");
   const [products, setProducts] = React.useState([]);
-
+  const [deleted, setDeleted] = React.useState(false);
   const apiGETproducts = () => {
     productService
       .getAllProducts()
       .then(function (data) {
         //   console.log(data[0].image.data);
         setProducts(data);
+        setDeleted(false);
       })
       .catch(function (error) {
         console.log(error);
       });
   };
-  React.useEffect(apiGETproducts, []);
+  React.useEffect(apiGETproducts, [deleted]);
   return (
     <div>
       <Grid container>
@@ -47,6 +49,7 @@ const EditProducts = (props) => {
               image={product.image.data}
               stock={product.stock}
               product={product}
+              setDeleted={setDeleted}
             ></RecipeReviewCard>
           );
         })}

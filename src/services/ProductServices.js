@@ -14,6 +14,7 @@ class ProductServices extends GenericService {
   //editProduct = (_id, data) => this.delete("products/delete/" + _id, data);
   sendOrder = (data) => this.post("products/neworder", data);
   getOrder = () => this.get("products/orders/");
+  delOrder = (id) => this.delete("products/orders/" + id);
   UserLogin = (data) => this.post("users/login", data);
   UserReg = (data) => this.post("users/register", data);
   getsingleProduct = (_id) => this.get("products/single/" + _id);

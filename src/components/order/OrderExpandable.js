@@ -16,7 +16,10 @@ import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import productService from "../../services/ProductServices";
 import CheckAdmin from "../../auth/CheckAdmin";
+import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
+
 import { useSelector, useDispatch } from "react-redux";
+import { setOrder } from "../../Redux/actions/OrderBadgeAction";
 
 const useRowStyles = makeStyles({
   root: {
@@ -44,6 +47,7 @@ function createData(name, calories, fat, carbs, protein, price) {
 function Row(props) {
   const { row } = props;
   const [open, setOpen] = React.useState(false);
+
   const [show, setshow] = React.useState(true);
   const classes = useRowStyles();
 
@@ -60,6 +64,30 @@ function Row(props) {
           </IconButton>
         </TableCell>
         <TableCell component="th" scope="row">
+          <IconButton
+            aria-label="show 4 new mails"
+            color="inherit"
+            onClick={() => {
+              productService
+                .delOrder(row._id)
+                .then((res) => {
+                  // console.log("Deleted oRder");
+                  props.setOrderDeleted(true);
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+            }}
+          >
+            <DeleteOutlineIcon />
+          </IconButton>
+        </TableCell>
+        <TableCell component="th" scope="row">
+          {row.time}
+          {" -"} {row.date}
+        </TableCell>
+
+        <TableCell component="th" scope="row">
           {row.customerData.fname}
         </TableCell>
         <TableCell align="left"> {row.customerData.address}</TableCell>
@@ -68,7 +96,7 @@ function Row(props) {
         <TableCell align="right">{row.customerData.lname}</TableCell>
       </TableRow>
       <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box margin={1}>
               <Typography variant="h6" gutterBottom component="div">
@@ -135,19 +163,23 @@ const rows = [
 export default function OrderExpandable(props) {
   const isLoggedInRedux = useSelector((state) => state.login.isloggedin);
   const [order, setorder] = React.useState([]);
+  const [orderDeleted, setOrderDeleted] = React.useState(false);
+  const dispatch = useDispatch();
   const apiPOSTorder = () => {
     //console.log(props.product._id);
+    setOrderDeleted(false);
     productService
       .getOrder()
       .then(function (order) {
-        console.log(order);
+        // console.log(order.order);
         setorder(order);
+        dispatch(setOrder(order.length));
       })
       .catch(function (error) {
         console.log(error);
       });
   };
-  React.useEffect(apiPOSTorder, []);
+  React.useEffect(apiPOSTorder, [orderDeleted]);
 
   // React.useEffect(() => {
   //   if (!isLoggedInRedux) {
@@ -164,6 +196,8 @@ export default function OrderExpandable(props) {
           <TableHead>
             <TableRow>
               <TableCell />
+              <TableCell>Action</TableCell>
+              <TableCell>Time</TableCell>
               <TableCell>Customer Name</TableCell>
               <TableCell align="left">Address</TableCell>
               <TableCell align="left">Phone no</TableCell>
@@ -172,9 +206,11 @@ export default function OrderExpandable(props) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {order.map((item, index) => (
-              <Row key={index} row={item} />
-            ))}
+            {order
+              .map((item, index) => (
+                <Row key={index} row={item} setOrderDeleted={setOrderDeleted} />
+              ))
+              .reverse()}
           </TableBody>
         </Table>
       </TableContainer>

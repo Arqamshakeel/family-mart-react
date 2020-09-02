@@ -7,6 +7,7 @@ import productService from "../../services/ProductServices";
 const ShowWithTags = (props) => {
   const [imgBuffer, setImgBuffer] = React.useState("");
   const [products, setProducts] = React.useState([]);
+  const [deleted, setDeleted] = React.useState(false);
   console.log(props);
   const apiGETproducts = () => {
     productService
@@ -14,13 +15,15 @@ const ShowWithTags = (props) => {
       .then(function (data) {
         //   console.log(data[0].image.data);
         setProducts(data);
+        // setDeleted(true);
+        setDeleted(false);
         //console.log(data[2].category);
       })
       .catch(function (error) {
         console.log(error);
       });
   };
-  React.useEffect(apiGETproducts, []);
+  React.useEffect(apiGETproducts, [deleted]);
   return (
     <div>
       <Grid container>
@@ -52,6 +55,7 @@ const ShowWithTags = (props) => {
                       image={product.image.data}
                       stock={product.stock}
                       product={product}
+                      setDeleted={setDeleted}
                     ></RecipeReviewCard>
                   ) : (
                     <Fragment key={i}></Fragment>

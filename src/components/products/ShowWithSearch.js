@@ -8,20 +8,21 @@ import Skeleton from "@material-ui/lab/Skeleton";
 const ShowWithSearch = (props) => {
   const [imgBuffer, setImgBuffer] = React.useState("");
   const [product, setProduct] = React.useState([]);
+  const [deleted, setDeleted] = React.useState(false);
   console.log(props);
   const apiGETproducts = () => {
     productService
       .getsingleProductByName(props.match.params.name)
       .then(function (data) {
         setProduct(data.product[0]);
-
         setImgBuffer(data.img);
+        setDeleted(false);
       })
       .catch(function (error) {
         console.log(error);
       });
   };
-  React.useEffect(apiGETproducts, [props.match.params.name]);
+  React.useEffect(apiGETproducts, [props.match.params.name, deleted]);
   return (
     <div>
       <Grid container>
@@ -41,13 +42,14 @@ const ShowWithSearch = (props) => {
       </Grid>
 
       <Grid container spacing={1} align="center" justify="center">
-        {product.name != null ? (
+        {product != null ? (
           <RecipeReviewCard
             image={imgBuffer}
             badge={props.badge}
             setbadge={props.setbadge}
             stock={product.stock}
             product={product}
+            setDeleted={setDeleted}
           ></RecipeReviewCard>
         ) : (
           [1].map((val, index) => {

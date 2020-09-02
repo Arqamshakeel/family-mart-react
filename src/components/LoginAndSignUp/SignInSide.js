@@ -14,13 +14,16 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import productService from "../../services/ProductServices";
 import userService from "../../services/UserService";
+import CustomBackdrop from "../backdrop/CustomBackdrop";
 import { useSelector, useDispatch } from "react-redux";
+import CheckLogIn from "../../auth/CheckLogIn";
 import {
   switchLogin,
   trueLogin,
   falseLogin,
 } from "../../Redux/actions/LoginAction";
 import SnackBar from "../snackBar/SnackBar";
+import { CircularProgress } from "@material-ui/core";
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -67,12 +70,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SignInSide = () => {
+const SignInSide = (props) => {
   const isLoggedInRedux = useSelector((state) => state.login.isloggedin);
   console.log("redux is loggedin: " + isLoggedInRedux);
   const dispatch = useDispatch();
   const [open, setOpen] = React.useState(false);
   const [msg, setmsg] = React.useState("");
+  const [loginProgress, setLoginProgress] = React.useState(false);
 
   const classes = useStyles();
   const [email, setEmail] = React.useState("");
@@ -82,18 +86,22 @@ const SignInSide = () => {
     : console.log("Not logged in");
 
   const handleLogin = () => {
+    setLoginProgress(true);
     userService
       .UserLogin({ email: email, password: password })
       .then(function (res) {
+        setLoginProgress(false);
         console.log(res);
         console.log("hello");
       })
       .then(() => {
+        props.history.push("/");
         userService.isLoggedin()
           ? dispatch(trueLogin())
           : console.log("Not logged in");
       })
       .catch(function (error) {
+        setLoginProgress(false);
         console.log(error);
         setOpen(true);
         setmsg(error);
@@ -101,81 +109,84 @@ const SignInSide = () => {
   };
 
   return (
-    <Grid container component="main" className={classes.root}>
-      <CssBaseline />
+    <CheckLogIn>
+      <Grid container component="main" className={classes.root}>
+        <CssBaseline />
 
-      <Grid item xs={false} sm={4} md={7} className={classes.image} />
-      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-        <div className={classes.paper}>
-          <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign in
-          </Typography>
-          <form className={classes.form}>
-            <TextField
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-              }}
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              autoFocus
-            />
-            <SnackBar open={open} setOpen={setOpen} msg={msg} />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              value={password}
-              onChange={(e) => {
-                setPassword(e.target.value);
-              }}
-              autoComplete="current-password"
-            />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
-            <Button
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-              onClick={handleLogin}
-            >
-              Sign In
-            </Button>
-
-            <Grid container>
-              <Grid item xs>
-                {/* <Link href="#" variant="body2">
+        <Grid item xs={false} sm={4} md={7} className={classes.image} />
+        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+          <div className={classes.paper}>
+            <Avatar className={classes.avatar}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              Sign in
+            </Typography>
+            <form className={classes.form}>
+              <TextField
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                }}
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+                autoFocus
+              />
+              <SnackBar open={open} setOpen={setOpen} msg={msg} />
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                }}
+                autoComplete="current-password"
+              />
+              <FormControlLabel
+                control={<Checkbox value="remember" color="primary" />}
+                label="Remember me"
+              />
+              <Button
+                fullWidth
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+                onClick={handleLogin}
+              >
+                Sign In
+              </Button>
+              {/* <CircularProgress color="secondary" />; */}
+              <CustomBackdrop open={loginProgress} setOpen={setLoginProgress} />
+              <Grid container>
+                <Grid item xs>
+                  {/* <Link href="#" variant="body2">
                   Forgot password?
                 </Link> */}
+                </Grid>
+                <Grid item>
+                  <Link href="#" variant="body2">
+                    {"Don't have an account? Sign Up"}
+                  </Link>
+                </Grid>
               </Grid>
-              <Grid item>
-                <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
-            </Grid>
-            <Box mt={5}>
-              <Copyright />
-            </Box>
-          </form>
-        </div>
+              <Box mt={5}>
+                <Copyright />
+              </Box>
+            </form>
+          </div>
+        </Grid>
       </Grid>
-    </Grid>
+    </CheckLogIn>
   );
 };
 export default SignInSide;

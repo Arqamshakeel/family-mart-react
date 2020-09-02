@@ -15,7 +15,8 @@ import Container from "@material-ui/core/Container";
 import productService from "../../services/ProductServices";
 import userService from "../../services/UserService";
 import SnackBar from "../snackBar/SnackBar";
-
+import CustomBackdrop from "../backdrop/CustomBackdrop";
+import CheckLogIn from "../../auth/CheckLogIn";
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -49,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignUp() {
+export default function SignUp(props) {
   const classes = useStyles();
   const [fname, setFname] = React.useState("");
   const [lname, setLname] = React.useState("");
@@ -57,8 +58,10 @@ export default function SignUp() {
   const [password, setPassword] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const [msg, setmsg] = React.useState("");
+  const [loginProgress, setLoginProgress] = React.useState(false);
 
   const handleLogin = () => {
+    setLoginProgress(true);
     userService
       .UserReg({
         email: email,
@@ -67,118 +70,123 @@ export default function SignUp() {
         lname: lname,
       })
       .then(function (res) {
-        console.log(res);
-        console.log("hello");
+        setLoginProgress(false);
+        props.history.push("/signin");
+        // console.log(res);
       })
       .catch(function (error) {
-        console.log(error);
-        console.log(error.response.data);
+        setLoginProgress(false);
         setOpen(true);
         setmsg(error.response.data);
       });
   };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign up
-        </Typography>
-        <form className={classes.form} noValidate>
-          <SnackBar open={open} setOpen={setOpen} msg={msg} />
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                autoComplete="fname"
-                name="firstName"
-                variant="outlined"
-                required
-                fullWidth
-                label="First Name"
-                value={fname}
-                onChange={(e) => {
-                  setFname(e.target.value);
-                }}
-                autoFocus
-              />
+    <CheckLogIn>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Sign up
+          </Typography>
+          <form className={classes.form} noValidate>
+            <SnackBar open={open} setOpen={setOpen} msg={msg} />
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  autoComplete="fname"
+                  name="firstName"
+                  variant="outlined"
+                  required
+                  fullWidth
+                  label="First Name"
+                  value={fname}
+                  onChange={(e) => {
+                    setFname(e.target.value);
+                  }}
+                  autoFocus
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  label="Last Name"
+                  name="lastName"
+                  value={lname}
+                  onChange={(e) => {
+                    setLname(e.target.value);
+                  }}
+                  autoComplete="lname"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email Address"
+                  name="email"
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                  }}
+                  autoComplete="email"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  name="password"
+                  label="Password"
+                  type="password"
+                  id="password"
+                  value={password}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                  }}
+                  autoComplete="current-password"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <FormControlLabel
+                  control={
+                    <Checkbox value="allowExtraEmails" color="primary" />
+                  }
+                  label="I want to receive inspiration, marketing promotions and updates via email."
+                />
+              </Grid>
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                label="Last Name"
-                name="lastName"
-                value={lname}
-                onChange={(e) => {
-                  setLname(e.target.value);
-                }}
-                autoComplete="lname"
-              />
+            <Button
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+              onClick={handleLogin}
+            >
+              Sign Up
+            </Button>
+            <CustomBackdrop open={loginProgress} setOpen={setLoginProgress} />
+            <Grid container justify="flex-end">
+              <Grid item>
+                <Link href="#" variant="body2">
+                  Already have an account? Sign in
+                </Link>
+              </Grid>
             </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                }}
-                autoComplete="email"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                }}
-                autoComplete="current-password"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <FormControlLabel
-                control={<Checkbox value="allowExtraEmails" color="primary" />}
-                label="I want to receive inspiration, marketing promotions and updates via email."
-              />
-            </Grid>
-          </Grid>
-          <Button
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-            onClick={handleLogin}
-          >
-            Sign Up
-          </Button>
-          <Grid container justify="flex-end">
-            <Grid item>
-              <Link href="#" variant="body2">
-                Already have an account? Sign in
-              </Link>
-            </Grid>
-          </Grid>
-        </form>
-      </div>
-      <Box mt={5}>
-        <Copyright />
-      </Box>
-    </Container>
+          </form>
+        </div>
+        <Box mt={5}>
+          <Copyright />
+        </Box>
+      </Container>
+    </CheckLogIn>
   );
 }
