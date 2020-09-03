@@ -60,6 +60,12 @@ const useStyles = makeStyles((theme) => ({
   avatar: {
     backgroundColor: red[500],
   },
+  largeButton: {
+    padding: 18,
+  },
+  largeIcon: {
+    fontSize: "1.5em",
+  },
 }));
 
 const RecipeReviewCard = (props) => {
@@ -227,14 +233,12 @@ const RecipeReviewCard = (props) => {
           )}
 
           <IconButton
+            className={classes.largeButton}
             aria-label="add to favorites"
             disabled={!props.stock}
             onClick={apiPOSTcart}
           >
-            <AddShoppingCartIcon />
-          </IconButton>
-          <IconButton aria-label="share">
-            <ShareIcon />
+            <AddShoppingCartIcon className={classes.largeIcon} />
           </IconButton>
 
           {/* <IconButton

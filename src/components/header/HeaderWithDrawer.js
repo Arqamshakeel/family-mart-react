@@ -73,6 +73,7 @@ import Push from "push.js";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import ShowWithSearch from "../products/ShowWithSearch";
+import ShowWithSearch2 from "../products/ShowWithSearch2";
 const socket = io.connect("http://localhost:4001");
 // const socket = io.connect(
 //   "http://ec2-18-224-94-239.us-east-2.compute.amazonaws.com:4001"
@@ -725,7 +726,8 @@ function ResponsiveDrawer(props) {
           <Route path="/allorders" exact component={OrderExpandable} />
           <Route path="/editproduct" exact component={EditProducts} />
           <Route path="/tags/:name" exact component={ShowWithTags} />
-          <Route path="/search/:name" exact component={ShowWithSearch} />
+          {/* <Route path="/search/:name" exact component={ShowWithSearch} /> */}
+          <Route path="/search/:name" exact component={ShowWithSearch2} />
           <Route path="/updateproduct/:id" exact component={UpdateProduct} />
           <Route path="/expired" exact component={EmptyStockProducts} />
         </Switch>

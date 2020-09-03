@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid } from "@material-ui/core";
+import { Grid, Typography } from "@material-ui/core";
 import RecipeReviewCard from "../CustomCard";
 import { useMediaQuery } from "react-responsive";
 import CustomCarousel from "../Carousel/Carousel";
@@ -11,17 +11,19 @@ const Home = (props) => {
   const [products, setProducts] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [deleted, setDeleted] = React.useState(false);
+  const [notFound, setNotFound] = React.useState(false);
   let skel = 10;
   const apiGETproducts = () => {
+    setNotFound(false);
     productService
       .getAllProducts()
       .then(function (data) {
-        //   console.log(data[0].image.data);
         setProducts(data);
         setDeleted(false);
         //props.setbadge("12");
       })
       .catch(function (error) {
+        setNotFound(true);
         console.log(error);
       });
   };
@@ -31,8 +33,9 @@ const Home = (props) => {
       <CustomCarousel></CustomCarousel>
 
       <Grid container spacing={1} align="center" justify="center">
-        {products.length != 0
-          ? products.map((product, index) => {
+        {notFound == false ? (
+          products.length != 0 ? (
+            products.map((product, index) => {
               return (
                 <RecipeReviewCard
                   badge={props.badge}
@@ -46,7 +49,8 @@ const Home = (props) => {
                 ></RecipeReviewCard>
               );
             })
-          : [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1].map((val, index) => {
+          ) : (
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1].map((val, index) => {
               return (
                 <div key={index} style={{ margin: "20px" }}>
                   <Skeleton variant="text" />
@@ -54,7 +58,11 @@ const Home = (props) => {
                   <Skeleton variant="rect" width={345} height={178} />
                 </div>
               );
-            })}
+            })
+          )
+        ) : (
+          <Typography variant="h5">Sorry there are no products</Typography>
+        )}
       </Grid>
 
       <Grid container style={{ marginTop: "25px" }}>
