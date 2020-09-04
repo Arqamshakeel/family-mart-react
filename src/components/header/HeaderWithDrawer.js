@@ -356,6 +356,19 @@ function ResponsiveDrawer(props) {
         <p>Cart</p>
       </MenuItem>
       <Divider />
+      <MenuItem
+        onClick={() => {
+          props.setDark(!props.dark);
+          handleMobileMenuClose();
+        }}
+      >
+        <IconButton aria-label="show 4 new mails" color="inherit">
+          <Brightness4Icon />
+        </IconButton>
+        <p>Dark mode</p>
+      </MenuItem>
+
+      <Divider />
 
       {userService.isLoggedin() ? (
         <MenuItem
@@ -367,9 +380,7 @@ function ResponsiveDrawer(props) {
           }}
         >
           <IconButton aria-label="show 4 new mails" color="inherit">
-            <Badge color="secondary">
-              <ExitToAppIcon />
-            </Badge>
+            <ExitToAppIcon />
           </IconButton>
           <p>Sign out</p>
         </MenuItem>
@@ -381,9 +392,7 @@ function ResponsiveDrawer(props) {
           }}
         >
           <IconButton aria-label="show 4 new mails" color="inherit">
-            <Badge badgeContent={cartBadge} color="secondary">
-              <AccountCircleIcon />
-            </Badge>
+            <AccountCircleIcon />
           </IconButton>
           <p>Sign in</p>
         </MenuItem>
