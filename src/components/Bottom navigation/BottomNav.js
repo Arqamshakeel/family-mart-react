@@ -13,7 +13,11 @@ import { useSelector, useDispatch } from "react-redux";
 import HomeIcon from "@material-ui/icons/Home";
 import userService from "../../services/UserService";
 import SendIcon from "@material-ui/icons/Send";
-
+import { Snackbar } from "@material-ui/core";
+import MuiAlert from "@material-ui/lab/Alert";
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 const useStyles = makeStyles({
   root: {
     width: "100%",
@@ -35,7 +39,18 @@ const BottomNav = (props) => {
   //console.log(props);
   const classes = useStyles();
   const [value, setValue] = React.useState();
+  const [openCartEmptyError, setOpenCartEmptyError] = React.useState(false);
+  const handleClickErrorCartSnack = () => {
+    setOpenCartEmptyError(true);
+  };
 
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenCartEmptyError(false);
+  };
   return (
     <ThemeProvider theme={theme}>
       <Paper>
@@ -88,12 +103,25 @@ const BottomNav = (props) => {
             <BottomNavigationAction
               label="Place Order"
               onClick={() => {
-                props.history.push("/orderform2");
+                cartBadge > 0
+                  ? props.history.push("/orderform2")
+                  : handleClickErrorCartSnack();
               }}
               icon={<SendIcon />}
             />
           )}
         </BottomNavigation>
+        <div className={classes.root}>
+          <Snackbar
+            open={openCartEmptyError}
+            autoHideDuration={2000}
+            onClose={handleClose}
+          >
+            <Alert onClose={handleClose} severity="error">
+              Please add items to you cart.
+            </Alert>
+          </Snackbar>
+        </div>
       </Paper>
     </ThemeProvider>
   );

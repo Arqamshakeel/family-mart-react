@@ -104,7 +104,7 @@ const Home = (props) => {
           </Box>
         </Grid>
       </Grid>
-      <OrderFab />
+      {/* <OrderFab /> */}
     </div>
   );
 };

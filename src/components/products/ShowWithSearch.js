@@ -5,6 +5,7 @@ import { useMediaQuery } from "react-responsive";
 import CustomCarousel from "../Carousel/Carousel";
 import productService from "../../services/ProductServices";
 import Skeleton from "@material-ui/lab/Skeleton";
+import OrderFab from "../OrderFAB/OrderFab";
 const ShowWithSearch = (props) => {
   const [imgBuffer, setImgBuffer] = React.useState("");
   const [product, setProduct] = React.useState([]);

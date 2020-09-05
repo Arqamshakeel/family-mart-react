@@ -18,7 +18,7 @@ const EmptyStockProducts = (props) => {
   const apiGETproducts = () => {
     setNotFound(false);
     productService
-      .getExpiredProducts(page, perPage)
+      .getOutOfStock(page, perPage)
       .then(function (data) {
         //   console.log(data[0].image.data);
         setProducts(data.product);
@@ -30,6 +30,7 @@ const EmptyStockProducts = (props) => {
         console.log(error);
       });
   };
+
   React.useEffect(apiGETproducts, [deleted, page]);
   React.useEffect(() => {
     window.scrollTo(0, 0);

@@ -6,6 +6,7 @@ import CustomCarousel from "../Carousel/Carousel";
 import productService from "../../services/ProductServices";
 import Skeleton from "@material-ui/lab/Skeleton";
 import Pagination from "@material-ui/lab/Pagination";
+import OrderFab from "../OrderFAB/OrderFab";
 const ShowExpired = (props) => {
   const [imgBuffer, setImgBuffer] = React.useState("");
   const [products, setProducts] = React.useState([]);
@@ -118,6 +119,7 @@ const ShowExpired = (props) => {
           </Box>
         </Grid>
       </Grid>
+      {/* <OrderFab /> */}
     </div>
   );
 };
