@@ -104,7 +104,6 @@ const EmptyStockProducts = (props) => {
             <Box display="flex" justifyContent="center" alignItems="center">
               <Pagination
                 style={{ float: "right" }}
-                rowsPerPageOptions={[5, 10, 15, 20]}
                 component="div"
                 onChange={(e, value) => {
                   setPage(value);

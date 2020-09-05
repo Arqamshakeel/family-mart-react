@@ -8,7 +8,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import productService from "../../services/ProductServices";
-import { Grid, IconButton, Button } from "@material-ui/core";
+import { Grid, IconButton } from "@material-ui/core";
 //import { Checkbox } from "@material-ui/core";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import { useDispatch } from "react-redux";

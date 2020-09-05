@@ -6,6 +6,7 @@ import CustomCarousel from "../Carousel/Carousel";
 import productService from "../../services/ProductServices";
 import Skeleton from "@material-ui/lab/Skeleton";
 import Pagination from "@material-ui/lab/Pagination";
+import OrderFab from "../OrderFAB/OrderFab";
 const Home = (props) => {
   const [imgBuffer, setImgBuffer] = React.useState("");
   const [products, setProducts] = React.useState([]);
@@ -90,7 +91,6 @@ const Home = (props) => {
           <Box display="flex" justifyContent="center" alignItems="center">
             <Pagination
               style={{ float: "right" }}
-              rowsPerPageOptions={[5, 10, 15, 20]}
               component="div"
               onChange={(e, value) => {
                 setPage(value);
@@ -104,6 +104,7 @@ const Home = (props) => {
           </Box>
         </Grid>
       </Grid>
+      <OrderFab />
     </div>
   );
 };

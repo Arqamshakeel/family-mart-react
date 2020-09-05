@@ -12,18 +12,14 @@ import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import productService from "../../services/ProductServices";
+
 import userService from "../../services/UserService";
 import CustomBackdrop from "../backdrop/CustomBackdrop";
 import { useSelector, useDispatch } from "react-redux";
 import CheckLogIn from "../../auth/CheckLogIn";
-import {
-  switchLogin,
-  trueLogin,
-  falseLogin,
-} from "../../Redux/actions/LoginAction";
+import { trueLogin } from "../../Redux/actions/LoginAction";
 import SnackBar from "../snackBar/SnackBar";
-import { CircularProgress } from "@material-ui/core";
+
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">

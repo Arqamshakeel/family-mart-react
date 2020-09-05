@@ -99,9 +99,11 @@ export default function AddressForm({
               onChange={handleChange}
               label="Area"
             >
-              <MenuItem value={"wapdatown"}>Wapda Town</MenuItem>
-              <MenuItem value={"citi"}>Citi Housing Society</MenuItem>
-              <MenuItem value={"canal"}>Canal View</MenuItem>
+              <MenuItem value={"Wapda_Town"}>Wapda Town</MenuItem>
+              <MenuItem value={"citi_Housing"}>Citi Housing Society</MenuItem>
+              <MenuItem value={"canal_View"}>Canal View</MenuItem>
+              <MenuItem value={"muhafiz_Town"}>Muhafiz Town</MenuItem>
+              <MenuItem value={"AL_Azizia"}>Al Azizia</MenuItem>
             </Select>
           </FormControl>
         </Grid>

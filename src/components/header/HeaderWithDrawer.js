@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import AppBar from "@material-ui/core/AppBar";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -22,26 +22,26 @@ import MenuIcon from "@material-ui/icons/Menu";
 import Toolbar from "@material-ui/core/Toolbar";
 //import NotificationsIcon from "@material-ui/icons/Notifications";
 import SearchIcon from "@material-ui/icons/Search";
-import InputBase from "@material-ui/core/InputBase";
+
 import { useMediaQuery } from "react-responsive";
-import AccountCircle from "@material-ui/icons/AccountCircle";
+
 import Typography from "@material-ui/core/Typography";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import { makeStyles, useTheme, fade } from "@material-ui/core/styles";
-import { BrowserRouter, Switch, Route, Link } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 import Home from "../home/Home";
 //import CustomCarousel from "../Carousel/Carousel";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import FormOrder from "../order/FormOrder";
-import AddProduct from "../products/AddProduct";
+
 import AddProduct2 from "../products/AddProduct2";
-import AddProductForm from "../products/AddProductForm";
+
 import Cart from "../cart/Cart";
-import MaterialTableDemo from "../cart/Cart2";
+import MaterialTableDemo from "../cart/CartScreen";
 import productService from "../../services/ProductServices";
 import { withRouter } from "react-router";
 import HomeIcon from "@material-ui/icons/Home";
-import AddIcon from "@material-ui/icons/Add";
+
 import { useSelector, useDispatch } from "react-redux";
 //import { decrement, zero } from "../../Redux/actions/CartBadgeAction";
 import { set } from "../../Redux/actions/CartBadgeAction";
@@ -56,7 +56,7 @@ import io from "socket.io-client";
 import BottomNav from "../Bottom navigation/BottomNav";
 //import Order from "../order/Order";
 import OrderExpandable from "../order/OrderExpandable";
-import addNotification from "react-push-notification";
+
 import { Button, Avatar, InputAdornment } from "@material-ui/core";
 import userService from "../../services/UserService";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
@@ -64,7 +64,7 @@ import { switchLogin, falseLogin } from "../../Redux/actions/LoginAction";
 import { red } from "@material-ui/core/colors";
 import Tooltip from "@material-ui/core/Tooltip";
 import CustomList from "../List/CustomList";
-import EditProducts from "../products/EditProducts";
+
 import UpdateProduct from "../products/UpdateProduct";
 import EmptyStockProducts from "../products/EmptyStockProducts";
 import ProductCategory from "../List/ProductCategory";
@@ -73,9 +73,10 @@ import Footer from "../footer/Footer";
 import Push from "push.js";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-import ShowWithSearch from "../products/ShowWithSearch";
+
 import ShowWithSearch2 from "../products/ShowWithSearch2";
 import ShowExpired from "../products/ShowExpired";
+import CartScreen from "../cart/CartScreen";
 const socket = io.connect("http://localhost:4001");
 // const socket = io.connect(
 //   "http://ec2-18-224-94-239.us-east-2.compute.amazonaws.com:4001"
@@ -751,7 +752,7 @@ function ResponsiveDrawer(props) {
           <Route path="/addproductform" exact component={AddProduct2} />
           {/* first from */}
           {/* <Route path="/addproductform2" exact component={AddProductForm} /> */}
-          <Route path="/cart" exact component={Cart} />
+          <Route path="/cart" exact component={CartScreen} />
           <Route path="/cart2" exact component={MaterialTableDemo} />
           <Route path="/signin" exact component={SignInSide} />
           <Route path="/signup" exact component={SignUp} />
