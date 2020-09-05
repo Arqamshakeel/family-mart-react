@@ -90,7 +90,14 @@ const CustomList = (props) => {
             <ListItemText primary="Add Product" />
           </ListItem>
         </List>
-        <List component="div" disablePadding>
+        <List
+          component="div"
+          disablePadding
+          onClick={() => {
+            props.history.push("/expired");
+            if (isTabletOrMobile) props.handleDrawerToggle();
+          }}
+        >
           <ListItem button className={classes.nested}>
             <ListItemIcon>
               <StarBorder />
@@ -103,7 +110,7 @@ const CustomList = (props) => {
             button
             className={classes.nested}
             onClick={() => {
-              props.history.push("/expired");
+              props.history.push("/outofstock");
               if (isTabletOrMobile) props.handleDrawerToggle();
             }}
           >
@@ -113,7 +120,7 @@ const CustomList = (props) => {
             <ListItemText primary="Out of stock" />
           </ListItem>
         </List>
-        <List component="div" disablePadding>
+        {/* <List component="div" disablePadding>
           <ListItem
             button
             className={classes.nested}
@@ -127,9 +134,9 @@ const CustomList = (props) => {
             </ListItemIcon>
             <ListItemText primary="Update" />
           </ListItem>
-        </List>
+        </List> */}
 
-        <List
+        {/* <List
           component="div"
           disablePadding
           onClick={() => {
@@ -143,7 +150,7 @@ const CustomList = (props) => {
             </ListItemIcon>
             <ListItemText primary="Delete" />
           </ListItem>
-        </List>
+        </List> */}
       </Collapse>
     </List>
   );

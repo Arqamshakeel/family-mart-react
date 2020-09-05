@@ -4,7 +4,8 @@ class ProductServices extends GenericService {
   constructor() {
     super();
   }
-  getAllProducts = () => this.get("products/");
+  getAllProducts = (page, perPage) =>
+    this.get("products?page=" + page + "&perPage=" + perPage);
   postProduct = (data) => this.post("products", data);
   getCart = (_id, counter) => this.get("products/cart/" + counter + "/" + _id);
   getAllCartData = () => this.get("products/cart/");
@@ -19,9 +20,17 @@ class ProductServices extends GenericService {
   UserReg = (data) => this.post("users/register", data);
   getsingleProduct = (_id) => this.get("products/single/" + _id);
   //this is not getting only single products, getting all searched products
-  getsingleProductByName = (name) => this.get("products/singlename/" + name);
-  getProductsByTag = (tag) => this.get("products/tags/" + tag);
+  getsingleProductByName = (name, page, perPage) =>
+    this.get(
+      "products/singlename/" + name + "?page=" + page + "&perPage=" + perPage
+    );
+  getProductsByTag = (tag, page, perPage) =>
+    this.get("products/tags/" + tag + "?page=" + page + "&perPage=" + perPage);
   getProductsname = () => this.get("products/name");
+  getOutOfStock = (page, perPage) =>
+    this.get("products/outofstock" + "?page=" + page + "&perPage=" + perPage);
+  getExpiredProducts = (page, perPage) =>
+    this.get("products/expired" + "?page=" + page + "&perPage=" + perPage);
   putProduct = (_id, data) => this.put("products/put/" + _id, data);
 }
 

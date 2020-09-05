@@ -7,6 +7,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import fileUpload from "fuctbase64";
 import productService from "../../services/ProductServices";
 import CustomBackdrop from "../backdrop/CustomBackdrop";
+import DateFnsUtils from "@date-io/date-fns";
 import CheckAdmin from "../../auth/CheckAdmin";
 import {
   MenuItem,
@@ -16,7 +17,13 @@ import {
   Button,
   Paper,
 } from "@material-ui/core";
+import {
+  MuiPickersUtilsProvider,
+  KeyboardTimePicker,
+  KeyboardDatePicker,
+} from "@material-ui/pickers";
 import CustomTags from "../chips/tags/CustomTags";
+import { set } from "../../Redux/actions/CartBadgeAction";
 
 const UpdateProduct = (props) => {
   const [tags, settags] = React.useState("");
@@ -32,6 +39,7 @@ const UpdateProduct = (props) => {
     file: "",
   });
   const [imgBase64, setImgBase64] = React.useState(null);
+  const [selectedDate, setSelectedDate] = React.useState(new Date());
   var buffer = null;
   let check = 0;
   const handleImage = (event) => {
@@ -66,6 +74,7 @@ const UpdateProduct = (props) => {
         setName(data.name);
         setStock(data.stock);
         setPrice(data.price);
+        setSelectedDate(data.expiry);
         //setName(data.name);
         setProductTags(data.category);
         setCompany(data.company);
@@ -86,6 +95,7 @@ const UpdateProduct = (props) => {
         price: price,
         company: company,
         tags: productTags,
+        expiry: selectedDate,
 
         img: check2 ? "data:image/jpeg;base64," + imgBase64 : img2,
       })
@@ -167,6 +177,23 @@ const UpdateProduct = (props) => {
                   }}
                   autoComplete="shipping cc-number"
                 />
+              </Grid>
+              <Grid item xs={12}>
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <KeyboardDatePicker
+                    margin="normal"
+                    label="Expiry Date"
+                    format="MM/dd/yyyy"
+                    value={selectedDate}
+                    onChange={(e) => {
+                      setSelectedDate(e);
+                      console.log(e);
+                    }}
+                    KeyboardButtonProps={{
+                      "aria-label": "change date",
+                    }}
+                  />
+                </MuiPickersUtilsProvider>
               </Grid>
               <Grid item xs={12}>
                 <FormControl fullWidth>

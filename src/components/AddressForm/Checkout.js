@@ -18,6 +18,7 @@ import MuiAlert from "@material-ui/lab/Alert";
 import productService from "../../services/ProductServices";
 //import axios from "axios";
 import io from "socket.io-client";
+import { useSelector } from "react-redux";
 //const socket = io.connect("http://localhost:4001");
 const socket = io.connect("http://localhost:4001");
 // const socket = io.connect(
@@ -108,6 +109,7 @@ export default function Checkout() {
   const [openError, setOpenError] = React.useState(false);
   const [openCartEmptyError, setOpenCartEmptyError] = React.useState(false);
   const [order, setOrder] = React.useState("");
+  const cartBadge = useSelector((state) => state.counter.counter);
   const handleClick = () => {
     setOpen(true);
   };
@@ -163,6 +165,7 @@ export default function Checkout() {
 
     if (activeStep == 2) {
       apiPOSTcart();
+      if (cartBadge == 0) handleClickErrorCartSnack();
     }
   };
   function formatAMPM(date) {

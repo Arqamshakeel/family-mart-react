@@ -8,9 +8,11 @@ import MailIcon from "@material-ui/icons/Mail";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import { Badge, createMuiTheme, ThemeProvider, Paper } from "@material-ui/core";
 import { withRouter } from "react-router-dom";
-import { set, setOrder } from "../../Redux/actions/CartBadgeAction";
+
 import { useSelector, useDispatch } from "react-redux";
 import HomeIcon from "@material-ui/icons/Home";
+import userService from "../../services/UserService";
+import SendIcon from "@material-ui/icons/Send";
 
 const useStyles = makeStyles({
   root: {
@@ -68,19 +70,29 @@ const BottomNav = (props) => {
               props.history.push("/");
             }}
           />
-          <BottomNavigationAction
-            label="Orders"
-            onClick={() => {
-              //console.log("yessssss");
+          {userService.isAdmin() ? (
+            <BottomNavigationAction
+              label="Orders"
+              onClick={() => {
+                //console.log("yessssss");
 
-              props.history.push("/allorders");
-            }}
-            icon={
-              <Badge badgeContent={orderBadge} color="secondary">
-                <MailIcon />
-              </Badge>
-            }
-          />
+                props.history.push("/allorders");
+              }}
+              icon={
+                <Badge badgeContent={orderBadge} color="secondary">
+                  <MailIcon />
+                </Badge>
+              }
+            />
+          ) : (
+            <BottomNavigationAction
+              label="Place Order"
+              onClick={() => {
+                props.history.push("/orderform2");
+              }}
+              icon={<SendIcon />}
+            />
+          )}
         </BottomNavigation>
       </Paper>
     </ThemeProvider>

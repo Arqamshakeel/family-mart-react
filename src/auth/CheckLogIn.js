@@ -4,13 +4,13 @@ import { withRouter } from "react-router-dom";
 import { useSelector } from "react-redux";
 const CheckLogIn = (props) => {
   const isLoggedInRedux = useSelector((state) => state.login.isloggedin);
-  console.log("checkadmin");
-  console.log(props);
-  React.useEffect(() => {
+
+  const func = () => {
     if (userService.isLoggedin()) {
       props.history.push("/");
     }
-  }, [isLoggedInRedux]);
+  };
+  React.useEffect(func, [isLoggedInRedux]);
   return <>{props.children}</>;
 };
 

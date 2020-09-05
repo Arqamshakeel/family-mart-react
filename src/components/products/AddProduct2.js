@@ -8,6 +8,7 @@ import fileUpload from "fuctbase64";
 import productService from "../../services/ProductServices";
 import CustomTags from "../chips/tags/CustomTags";
 import CustomBackdrop from "../backdrop/CustomBackdrop";
+import DateFnsUtils from "@date-io/date-fns";
 import {
   MenuItem,
   Select,
@@ -16,6 +17,11 @@ import {
   Button,
   Paper,
 } from "@material-ui/core";
+import {
+  MuiPickersUtilsProvider,
+  KeyboardTimePicker,
+  KeyboardDatePicker,
+} from "@material-ui/pickers";
 import CheckAdmin from "../../auth/CheckAdmin";
 
 const AddProduct2 = (props) => {
@@ -73,6 +79,8 @@ const AddProduct2 = (props) => {
   //       console.log(error);
   //     });
   // };
+  const [selectedDate, setSelectedDate] = React.useState(new Date());
+
   const apiPutproduct = () => {
     setLoginProgress(true);
     productService
@@ -83,6 +91,13 @@ const AddProduct2 = (props) => {
         tags: productTags,
         img: "data:image/jpeg;base64," + imgBase64,
         company: company,
+        // expiry:
+        //   selectedDate.getDate() +
+        //   "/" +
+        //   (selectedDate.getMonth() + 1) +
+        //   "/" +
+        //   selectedDate.getFullYear(),
+        expiry: selectedDate,
       })
       .then(function (data) {
         setLoginProgress(false);
@@ -152,6 +167,26 @@ const AddProduct2 = (props) => {
                   }}
                   autoComplete="shipping cc-number"
                 />
+              </Grid>
+              <Grid item xs={12}>
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <KeyboardDatePicker
+                    margin="normal"
+                    label="Expiry Date"
+                    format="MM/dd/yyyy"
+                    value={selectedDate}
+                    onChange={(e) => {
+                      setSelectedDate(e);
+                      console.log(e);
+                      console.log(e.getMonth() + 1);
+                      console.log(e.getDate());
+                      console.log(e.getFullYear());
+                    }}
+                    KeyboardButtonProps={{
+                      "aria-label": "change date",
+                    }}
+                  />
+                </MuiPickersUtilsProvider>
               </Grid>
               <Grid item xs={12}>
                 <TextField

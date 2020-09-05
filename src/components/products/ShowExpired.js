@@ -6,7 +6,7 @@ import CustomCarousel from "../Carousel/Carousel";
 import productService from "../../services/ProductServices";
 import Skeleton from "@material-ui/lab/Skeleton";
 import Pagination from "@material-ui/lab/Pagination";
-const ShowWithTags = (props) => {
+const ShowExpired = (props) => {
   const [imgBuffer, setImgBuffer] = React.useState("");
   const [products, setProducts] = React.useState([]);
   const [deleted, setDeleted] = React.useState(false);
@@ -17,11 +17,11 @@ const ShowWithTags = (props) => {
   const apiGETproducts = () => {
     setNotFound(false);
     productService
-      .getProductsByTag(props.match.params.name, page, perPage)
+      .getExpiredProducts(props.match.params.name, page, perPage)
       .then(function (data) {
         //   console.log(data[0].image.data);
-        setProducts(data.product);
-        setTotal(data.total);
+        setProducts(data);
+        setTotal(0);
         // setDeleted(true);
         setDeleted(false);
         //console.log(data[2].category);
@@ -116,11 +116,10 @@ const ShowWithTags = (props) => {
               count={Math.ceil(total / perPage)}
               color="secondary"
             />
-            {/* </Box> */}
           </Box>
         </Grid>
       </Grid>
     </div>
   );
 };
-export default ShowWithTags;
+export default ShowExpired;

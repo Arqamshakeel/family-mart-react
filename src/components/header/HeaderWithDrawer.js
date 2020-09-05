@@ -1,8 +1,9 @@
-import React from "react";
+import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import AppBar from "@material-ui/core/AppBar";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Divider from "@material-ui/core/Divider";
+import SendIcon from "@material-ui/icons/Send";
 import Drawer from "@material-ui/core/Drawer";
 import Hidden from "@material-ui/core/Hidden";
 import IconButton from "@material-ui/core/IconButton";
@@ -74,6 +75,7 @@ import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import ShowWithSearch from "../products/ShowWithSearch";
 import ShowWithSearch2 from "../products/ShowWithSearch2";
+import ShowExpired from "../products/ShowExpired";
 const socket = io.connect("http://localhost:4001");
 // const socket = io.connect(
 //   "http://ec2-18-224-94-239.us-east-2.compute.amazonaws.com:4001"
@@ -192,6 +194,12 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up("md")]: {
       display: "none",
     },
+  },
+  largeButton: {
+    padding: 0,
+  },
+  largeIcon: {
+    fontSize: "1.5em",
   },
 }));
 
@@ -413,19 +421,33 @@ function ResponsiveDrawer(props) {
       </MenuItem>
 
       <Divider />
-      <MenuItem
-        onClick={() => {
-          props.history.push("/allorders");
-          handleMobileMenuClose();
-        }}
-      >
-        <IconButton aria-label="show 11 new notifications" color="inherit">
-          <Badge badgeContent={orderBadge} color="secondary">
-            <MessageIcon />
-          </Badge>
-        </IconButton>
-        <p>Orders</p>
-      </MenuItem>
+      {userService.isAdmin() ? (
+        <MenuItem
+          onClick={() => {
+            props.history.push("/allorders");
+            handleMobileMenuClose();
+          }}
+        >
+          <IconButton aria-label="show 11 new notifications" color="inherit">
+            <Badge badgeContent={orderBadge} color="secondary">
+              <MessageIcon />
+            </Badge>
+          </IconButton>
+          <p>Orders</p>
+        </MenuItem>
+      ) : (
+        <MenuItem
+          onClick={() => {
+            props.history.push("/orderform2");
+            handleMobileMenuClose();
+          }}
+        >
+          <IconButton aria-label="show 11 new notifications" color="inherit">
+            <SendIcon />
+          </IconButton>
+          <p>Send Order</p>
+        </MenuItem>
+      )}
     </Menu>
   );
   const drawer = (
@@ -456,7 +478,7 @@ function ResponsiveDrawer(props) {
           }}
         >
           <ListItemIcon>
-            <AddIcon />
+            <SendIcon />
           </ListItemIcon>
           <ListItemText primary={"Order Form"} />
         </ListItem>
@@ -469,7 +491,7 @@ function ResponsiveDrawer(props) {
           }}
         >
           <ListItemIcon>
-            <AddIcon />
+            <AccountCircleIcon />
           </ListItemIcon>
           <ListItemText primary={"Sign in"} />
         </ListItem>
@@ -482,9 +504,9 @@ function ResponsiveDrawer(props) {
           }}
         >
           <ListItemIcon>
-            <AddIcon />
+            <AccountCircleIcon />
           </ListItemIcon>
-          <ListItemText primary={"Sign up"} />
+          <ListItemText primary={"Register"} />
         </ListItem>
         <Divider />
         {userService.isAdmin() ? (
@@ -543,15 +565,15 @@ function ResponsiveDrawer(props) {
                   onKeyDown={handleKeyDown}
                   placeholder="Search…"
                   {...params}
-                  renderInput={(params) => (
-                    <InputBase
-                      placeholder="Search…"
-                      ref={params.ref}
-                      ref={params.InputProps.ref}
-                      inputProps={params.inputProps}
-                      inputProps={{ "aria-label": "search" }}
-                    />
-                  )}
+                  // renderInput={(params) => (
+                  //   <InputBase
+                  //     placeholder="Search…"
+                  //     ref={params.ref}
+                  //     ref={params.InputProps.ref}
+                  //     inputProps={params.inputProps}
+                  //     inputProps={{ "aria-label": "search" }}
+                  //   />
+                  // )}
                 />
               )}
             />
@@ -674,13 +696,14 @@ function ResponsiveDrawer(props) {
 
           <div className={classes.sectionMobile}>
             <IconButton
+              className={classes.largeButton}
               aria-label="show more"
               aria-controls={mobileMenuId}
               aria-haspopup="true"
               onClick={handleMobileMenuOpen}
               color="inherit"
             >
-              <MoreIcon />
+              <MoreIcon className={classes.largeIcon} />
             </IconButton>
           </div>
         </Toolbar>
@@ -733,12 +756,13 @@ function ResponsiveDrawer(props) {
           <Route path="/signin" exact component={SignInSide} />
           <Route path="/signup" exact component={SignUp} />
           <Route path="/allorders" exact component={OrderExpandable} />
-          <Route path="/editproduct" exact component={EditProducts} />
+          {/* <Route path="/editproduct" exact component={EditProducts} /> */}
           <Route path="/tags/:name" exact component={ShowWithTags} />
           {/* <Route path="/search/:name" exact component={ShowWithSearch} /> */}
           <Route path="/search/:name" exact component={ShowWithSearch2} />
           <Route path="/updateproduct/:id" exact component={UpdateProduct} />
-          <Route path="/expired" exact component={EmptyStockProducts} />
+          <Route path="/outofstock" exact component={EmptyStockProducts} />
+          <Route path="/expired" exact component={ShowExpired} />
         </Switch>
         <Footer />
         {isTabletOrMobileDevice && isPortrait ? <BottomNav /> : <></>}

@@ -1,22 +1,27 @@
 import React, { Fragment } from "react";
-import { Grid, Typography, Paper } from "@material-ui/core";
+import { Grid, Typography, Paper, Box } from "@material-ui/core";
 import RecipeReviewCard from "../CustomCard";
 import { useMediaQuery } from "react-responsive";
 import CustomCarousel from "../Carousel/Carousel";
 import productService from "../../services/ProductServices";
 import Skeleton from "@material-ui/lab/Skeleton";
+import Pagination from "@material-ui/lab/Pagination";
 const ShowWithSearch = (props) => {
   const [imgBuffer, setImgBuffer] = React.useState("");
   const [products, setProducts] = React.useState([]);
   const [deleted, setDeleted] = React.useState(false);
   const [notFound, setNotFound] = React.useState(false);
+  const [page, setPage] = React.useState(1);
+  const [perPage, setPerPage] = React.useState(10);
+  const [total, setTotal] = React.useState(0);
   //console.log(props);
   const apiGETproducts = () => {
     setNotFound(false);
     productService
-      .getsingleProductByName(props.match.params.name)
+      .getsingleProductByName(props.match.params.name, page, perPage)
       .then(function (data) {
-        setProducts(data);
+        setProducts(data.product);
+        setTotal(data.total);
         // setImgBuffer(data.img);
         setDeleted(false);
       })
@@ -25,7 +30,10 @@ const ShowWithSearch = (props) => {
         console.log(error);
       });
   };
-  React.useEffect(apiGETproducts, [props.match.params.name, deleted]);
+  React.useEffect(apiGETproducts, [props.match.params.name, deleted, page]);
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [page]);
   return (
     <div>
       <Grid container>
@@ -77,6 +85,40 @@ const ShowWithSearch = (props) => {
             Sorry product not found. Try with suggestions...
           </Typography>
         )}
+      </Grid>
+      <Grid container style={{ marginTop: "25px" }}>
+        {/* <Grid item xs={12} md={4} lg={4}></Grid>
+        <Grid item xs={12} md={3} lg={3}></Grid>
+        <Grid item xs={12} md={5} lg={5}>
+          <Pagination
+            onChange={(e, value) => {
+              setPage(value);
+            }}
+            value={page}
+            size="large"
+            style={{ float: "right" }}
+            count={10}
+            color="secondary"
+          />
+        </Grid> */}
+        <Grid item xs={12}>
+          {/* <Box display="flex" justifyContent="" alignItems="right"> */}
+          <Box display="flex" justifyContent="center" alignItems="center">
+            <Pagination
+              style={{ float: "right" }}
+              rowsPerPageOptions={[5, 10, 15, 20]}
+              component="div"
+              onChange={(e, value) => {
+                setPage(value);
+              }}
+              value={page}
+              size="large"
+              count={Math.ceil(total / perPage)}
+              color="secondary"
+            />
+            {/* </Box> */}
+          </Box>
+        </Grid>
       </Grid>
     </div>
   );

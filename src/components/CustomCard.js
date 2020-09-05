@@ -14,7 +14,7 @@ import { red } from "@material-ui/core/colors";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import ShareIcon from "@material-ui/icons/Share";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import { Grid, Snackbar, Fab } from "@material-ui/core";
+import { Grid, Snackbar, Fab, Box } from "@material-ui/core";
 import AddShoppingCartIcon from "@material-ui/icons/AddShoppingCart";
 import IncrementDecrement from "./Card Components/IncrementDecrement";
 import productService from "../services/ProductServices";
@@ -83,6 +83,11 @@ const RecipeReviewCard = (props) => {
   const [openErrorSnack, setOpenErrorSnack] = React.useState(false);
   const [openDeleteSnack, setOpenDeleteSnack] = React.useState(false);
   const [msgSnack, setmsgSnack] = React.useState("");
+  const [expiry, setExpiry] = React.useState(new Date(props.product.expiry));
+
+  // React.useEffect(() => {
+  //   setExpiry(props.product.expiry);
+  // }, []);
 
   const handleClick = () => {
     setOpenErrorSnack(true);
@@ -176,7 +181,13 @@ const RecipeReviewCard = (props) => {
               </Fab>
             }
             title=""
-            subheader="September 14, 2016"
+            subheader={
+              expiry.getDate() +
+              "/" +
+              (expiry.getMonth() + 1) +
+              "/" +
+              expiry.getFullYear()
+            }
           />
         ) : (
           <></>
