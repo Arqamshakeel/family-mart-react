@@ -50,23 +50,11 @@ const CustomList = (props) => {
       aria-labelledby="nested-list-subheader"
       subheader={
         <ListSubheader component="div" id="nested-list-subheader">
-          Nested List Items
+          Admin List
         </ListSubheader>
       }
       className={classes.root}
     >
-      <ListItem button>
-        <ListItemIcon>
-          <SendIcon />
-        </ListItemIcon>
-        <ListItemText primary="Sent mail" />
-      </ListItem>
-      <ListItem button>
-        <ListItemIcon>
-          <DraftsIcon />
-        </ListItemIcon>
-        <ListItemText primary="Drafts" />
-      </ListItem>
       <ListItem button onClick={handleClick}>
         <ListItemIcon>
           <InboxIcon />
@@ -81,7 +69,7 @@ const CustomList = (props) => {
             className={classes.nested}
             onClick={() => {
               props.history.push("/addproductform");
-              if (isTabletOrMobile) props.handleDrawerToggle();
+              if (isTabletOrMobileDevice) props.handleDrawerToggle();
             }}
           >
             <ListItemIcon>
@@ -95,7 +83,7 @@ const CustomList = (props) => {
           disablePadding
           onClick={() => {
             props.history.push("/expired");
-            if (isTabletOrMobile) props.handleDrawerToggle();
+            if (isTabletOrMobileDevice) props.handleDrawerToggle();
           }}
         >
           <ListItem button className={classes.nested}>
@@ -111,7 +99,7 @@ const CustomList = (props) => {
             className={classes.nested}
             onClick={() => {
               props.history.push("/outofstock");
-              if (isTabletOrMobile) props.handleDrawerToggle();
+              if (isTabletOrMobileDevice) props.handleDrawerToggle();
             }}
           >
             <ListItemIcon>

@@ -138,7 +138,7 @@ const RecipeReviewCard = (props) => {
   // };
 
   return (
-    <Grid item xs={12} md={4} lg={3} style={{ border: "1px solid balck" }}>
+    <Grid item xs={10} md={4} lg={3} style={{ border: "1px solid balck" }}>
       <div className={classes.root}>
         <Snackbar
           open={openErrorSnack}

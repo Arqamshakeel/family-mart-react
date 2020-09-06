@@ -176,7 +176,11 @@ export default function SignUp(props) {
             <CustomBackdrop open={loginProgress} setOpen={setLoginProgress} />
             <Grid container justify="flex-end">
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link
+                  onClick={() => {
+                    props.history.push("/signin");
+                  }}
+                >
                   Already have an account? Sign in
                 </Link>
               </Grid>

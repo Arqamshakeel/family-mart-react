@@ -7,6 +7,7 @@ import productService from "../../services/ProductServices";
 import Skeleton from "@material-ui/lab/Skeleton";
 import Pagination from "@material-ui/lab/Pagination";
 import OrderFab from "../OrderFAB/OrderFab";
+import CustomBackdrop from "../backdrop/CustomBackdrop";
 const ShowWithSearch = (props) => {
   const [imgBuffer, setImgBuffer] = React.useState("");
   const [products, setProducts] = React.useState([]);
@@ -14,6 +15,7 @@ const ShowWithSearch = (props) => {
   const [notFound, setNotFound] = React.useState(false);
   const [page, setPage] = React.useState(1);
   const [perPage, setPerPage] = React.useState(10);
+  const [loginProgress, setLoginProgress] = React.useState(false);
   const [total, setTotal] = React.useState(0);
   //console.log(props);
   const apiGETproducts = () => {
@@ -25,8 +27,10 @@ const ShowWithSearch = (props) => {
         setTotal(data.total);
         // setImgBuffer(data.img);
         setDeleted(false);
+        setLoginProgress(false);
       })
       .catch(function (error) {
+        setLoginProgress(false);
         setNotFound(true);
         console.log(error);
       });
@@ -88,6 +92,7 @@ const ShowWithSearch = (props) => {
         )}
       </Grid>
       <Grid container style={{ marginTop: "25px" }}>
+        <CustomBackdrop open={loginProgress} setOpen={setLoginProgress} />
         {/* <Grid item xs={12} md={4} lg={4}></Grid>
         <Grid item xs={12} md={3} lg={3}></Grid>
         <Grid item xs={12} md={5} lg={5}>
@@ -109,6 +114,7 @@ const ShowWithSearch = (props) => {
               style={{ float: "right" }}
               component="div"
               onChange={(e, value) => {
+                setLoginProgress(true);
                 setPage(value);
               }}
               value={page}

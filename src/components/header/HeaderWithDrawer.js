@@ -78,7 +78,7 @@ import ShowWithSearch2 from "../products/ShowWithSearch2";
 import ShowExpired from "../products/ShowExpired";
 import CartScreen from "../cart/CartScreen";
 const socket = io.connect("http://localhost:4001");
-// const socket = io.connect("https://familymart.gq/api");
+// const socket = io.connect("https://familymart.gq");
 // axios.defaults.baseURL = "https://familymart.gq/api/";
 // const socket = io.connect(
 //   "http://ec2-18-224-94-239.us-east-2.compute.amazonaws.com:4001"
@@ -456,6 +456,7 @@ function ResponsiveDrawer(props) {
   const drawer = (
     <div>
       <div className={classes.toolbar} />
+
       <Divider />
       <List>
         <ListItem
@@ -463,7 +464,7 @@ function ResponsiveDrawer(props) {
           onClick={() => {
             props.history.push("/");
 
-            if (isTabletOrMobile) handleDrawerToggle();
+            if (isTabletOrMobileDevice) handleDrawerToggle();
           }}
         >
           <ListItemIcon>
@@ -477,7 +478,7 @@ function ResponsiveDrawer(props) {
           button
           onClick={() => {
             props.history.push("/orderform2");
-            if (isTabletOrMobile) handleDrawerToggle();
+            if (isTabletOrMobileDevice) handleDrawerToggle();
           }}
         >
           <ListItemIcon>
@@ -486,24 +487,40 @@ function ResponsiveDrawer(props) {
           <ListItemText primary={"Order Form"} />
         </ListItem>
         <Divider />
-        <ListItem
-          button
-          onClick={() => {
-            props.history.push("/signin");
-            if (isTabletOrMobile) handleDrawerToggle();
-          }}
-        >
-          <ListItemIcon>
-            <AccountCircleIcon />
-          </ListItemIcon>
-          <ListItemText primary={"Sign in"} />
-        </ListItem>
+        {userService.isLoggedin() ? (
+          <ListItem
+            button
+            onClick={() => {
+              userService.logout();
+              dispatch(falseLogin());
+              if (isTabletOrMobileDevice) handleDrawerToggle();
+            }}
+          >
+            <ListItemIcon>
+              <ExitToAppIcon />
+            </ListItemIcon>
+            <ListItemText primary={"Sign out"} />
+          </ListItem>
+        ) : (
+          <ListItem
+            button
+            onClick={() => {
+              props.history.push("/signin");
+              if (isTabletOrMobileDevice) handleDrawerToggle();
+            }}
+          >
+            <ListItemIcon>
+              <AccountCircleIcon />
+            </ListItemIcon>
+            <ListItemText primary={"Sign in"} />
+          </ListItem>
+        )}
         <Divider />
         <ListItem
           button
           onClick={() => {
             props.history.push("/signup");
-            if (isTabletOrMobile) handleDrawerToggle();
+            if (isTabletOrMobileDevice) handleDrawerToggle();
           }}
         >
           <ListItemIcon>
@@ -514,14 +531,14 @@ function ResponsiveDrawer(props) {
         <Divider />
         {userService.isAdmin() ? (
           <CustomList
-            isTabletOrMobile={isTabletOrMobile}
+            isTabletOrMobile={isTabletOrMobileDevice}
             handleDrawerToggle={handleDrawerToggle}
           />
         ) : (
           <></>
         )}
         <ProductCategory
-          isTabletOrMobile={isTabletOrMobile}
+          isTabletOrMobile={isTabletOrMobileDevice}
           handleDrawerToggle={handleDrawerToggle}
         />
       </List>
@@ -635,7 +652,7 @@ function ResponsiveDrawer(props) {
                 </Button>
               </div>
             )}
-            {isLoggedInRedux ? (
+            {isLoggedInRedux && userService.isAdmin() ? (
               <IconButton
                 aria-label="show 4 new mails"
                 color="inherit"

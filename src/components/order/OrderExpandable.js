@@ -53,9 +53,25 @@ function createData(name, calories, fat, carbs, protein, price) {
 function Row(props) {
   const { row } = props;
   const [open, setOpen] = React.useState(false);
+  const [totalPrice, setTotalPrice] = React.useState(() => {
+    let test = 0;
+    for (let i = 0; i < row.cart.length; i++) {
+      test = test + Number(row.cart[i].qty) * Number(row.cart[i].price);
+    }
+    return test;
+  });
 
   const [show, setshow] = React.useState(true);
   const classes = useRowStyles();
+
+  // (cart) => {
+  //   var test = 0;
+  //   for (let i = 0; i < cart.length; i++) {
+  //     test = test + Number(cart[i].qty) * Number(cart[i].price);
+  //     console.log(test + "totalllllll");
+  //     setTotalPrice(test);
+  //   }
+  // };
 
   return (
     <React.Fragment>
@@ -142,6 +158,17 @@ function Row(props) {
                       </TableCell>
                     </TableRow>
                   ))}
+                  <TableRow>
+                    <TableCell component="th" scope="row"></TableCell>
+                    <TableCell component="th" scope="row"></TableCell>
+
+                    <TableCell component="th" scope="row" align="right">
+                      Total
+                    </TableCell>
+                    <TableCell component="th" scope="row" align="right">
+                      {totalPrice}
+                    </TableCell>
+                  </TableRow>
                 </TableBody>
               </Table>
             </Box>
@@ -182,6 +209,8 @@ export default function OrderExpandable(props) {
   const isLoggedInRedux = useSelector((state) => state.login.isloggedin);
   const [order, setorder] = React.useState([]);
   const [orderDeleted, setOrderDeleted] = React.useState(false);
+  const [total, setTotal] = React.useState(0);
+  const [cart2, setCart2] = React.useState([]);
   const dispatch = useDispatch();
   const apiPOSTorder = () => {
     //console.log(props.product._id);
@@ -191,6 +220,7 @@ export default function OrderExpandable(props) {
       .then(function (order) {
         // console.log(order.order);
         setorder(order);
+        console.log(order);
         dispatch(setOrder(order.length));
       })
       .catch(function (error) {
@@ -227,7 +257,18 @@ export default function OrderExpandable(props) {
           <TableBody>
             {order
               .map((item, index) => (
-                <Row key={index} row={item} setOrderDeleted={setOrderDeleted} />
+                <Row
+                  key={index}
+                  row={item}
+                  setOrderDeleted={setOrderDeleted}
+                  total={() => {
+                    item.cart.map((data, index) => {
+                      let test = test + Number(data.qty) * Number(data.price);
+                    });
+                    console.log(test);
+                    return test;
+                  }}
+                />
               ))
               .reverse()}
           </TableBody>

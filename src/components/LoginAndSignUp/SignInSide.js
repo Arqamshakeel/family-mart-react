@@ -68,7 +68,7 @@ const useStyles = makeStyles((theme) => ({
 
 const SignInSide = (props) => {
   const isLoggedInRedux = useSelector((state) => state.login.isloggedin);
-  console.log("redux is loggedin: " + isLoggedInRedux);
+  // console.log("redux is loggedin: " + isLoggedInRedux);
   const dispatch = useDispatch();
   const [open, setOpen] = React.useState(false);
   const [msg, setmsg] = React.useState("");
@@ -77,21 +77,21 @@ const SignInSide = (props) => {
   const classes = useStyles();
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
-  userService.isLoggedin()
-    ? console.log("Yes logged in")
-    : console.log("Not logged in");
+  // userService.isLoggedin()
+  //   ? console.log("Yes logged in")
+  //   : console.log("Not logged in");
 
   const handleLogin = () => {
     setLoginProgress(true);
     userService
-      .UserLogin({ email: email, password: password })
+      .UserLogin({ email: email.toLowerCase(), password: password })
       .then(function (res) {
+        props.history.push("/");
         setLoginProgress(false);
-        console.log(res);
-        console.log("hello");
+        // console.log(res);
+        // console.log("hello");
       })
       .then(() => {
-        props.history.push("/");
         userService.isLoggedin()
           ? dispatch(trueLogin())
           : console.log("Not logged in");
@@ -170,7 +170,12 @@ const SignInSide = (props) => {
                 </Link> */}
                 </Grid>
                 <Grid item>
-                  <Link href="#" variant="body2">
+                  <Link
+                    variant="body2"
+                    onClick={() => {
+                      props.history.push("/signup");
+                    }}
+                  >
                     {"Don't have an account? Sign Up"}
                   </Link>
                 </Grid>

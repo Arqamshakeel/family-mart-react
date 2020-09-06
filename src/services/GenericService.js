@@ -57,6 +57,17 @@ class GenericService {
           reject(error);
         });
     });
+  postReg = (url, data) =>
+    new Promise((resolve, reject) => {
+      axios
+        .post(url, data)
+        .then((res) => {
+          resolve(res);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
 
   put = (url, data) =>
     new Promise((resolve, reject) => {

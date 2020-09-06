@@ -91,7 +91,7 @@ const ProductCategory = (props) => {
                 className={classes.nested}
                 onClick={() => {
                   props.history.push("/tags/" + item);
-                  if (isTabletOrMobile) props.handleDrawerToggle();
+                  if (isTabletOrMobileDevice) props.handleDrawerToggle();
                 }}
               >
                 <ListItemIcon>

@@ -28,6 +28,7 @@ const Home = (props) => {
         setLoginProgress(false);
       })
       .catch(function (error) {
+        setLoginProgress(false);
         setNotFound(true);
         console.log(error);
       });

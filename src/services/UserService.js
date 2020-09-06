@@ -55,6 +55,17 @@ class UserService extends GenericService {
   };
 
   UserReg = (data) => this.post("users/register", data);
+  // UserReg = (data) =>
+  //   new Promise((resolve, reject) => {
+  //     this.postReg("users/register", data)
+  //       .then((res) => {
+  //         resolve();
+  //       })
+  //       .catch((err) => {
+  //         //console.log("in try of user login");
+  //         reject(err);
+  //       });
+  //   });
 }
 
 let userService = new UserService();

@@ -7,6 +7,7 @@ import productService from "../../services/ProductServices";
 import Skeleton from "@material-ui/lab/Skeleton";
 import Pagination from "@material-ui/lab/Pagination";
 import OrderFab from "../OrderFAB/OrderFab";
+import CustomBackdrop from "../backdrop/CustomBackdrop";
 const ShowWithTags = (props) => {
   const [imgBuffer, setImgBuffer] = React.useState("");
   const [products, setProducts] = React.useState([]);
@@ -15,6 +16,7 @@ const ShowWithTags = (props) => {
   const [page, setPage] = React.useState(1);
   const [perPage, setPerPage] = React.useState(10);
   const [total, setTotal] = React.useState(0);
+  const [loginProgress, setLoginProgress] = React.useState(false);
   const apiGETproducts = () => {
     setNotFound(false);
     productService
@@ -25,9 +27,11 @@ const ShowWithTags = (props) => {
         setTotal(data.total);
         // setDeleted(true);
         setDeleted(false);
+        setLoginProgress(false);
         //console.log(data[2].category);
       })
       .catch(function (error) {
+        setLoginProgress(false);
         setNotFound(true);
         console.log(error);
       });
@@ -40,8 +44,8 @@ const ShowWithTags = (props) => {
     <div>
       <Grid container>
         <Grid item xs={12} md={6} lg={4}></Grid>
-        <Grid item xs={12} md={6} lg={4}>
-          <Paper>
+        <Grid item xs={12} md={12} lg={12}>
+          <Paper style={{ marginTop: "25px" }}>
             <Typography
               variant="h3"
               gutterBottom
@@ -88,6 +92,7 @@ const ShowWithTags = (props) => {
         )}
       </Grid>
       <Grid container style={{ marginTop: "25px" }}>
+        <CustomBackdrop open={loginProgress} setOpen={setLoginProgress} />
         {/* <Grid item xs={12} md={4} lg={4}></Grid>
         <Grid item xs={12} md={3} lg={3}></Grid>
         <Grid item xs={12} md={5} lg={5}>
@@ -109,6 +114,7 @@ const ShowWithTags = (props) => {
               style={{ float: "right" }}
               component="div"
               onChange={(e, value) => {
+                setLoginProgress(true);
                 setPage(value);
               }}
               value={page}

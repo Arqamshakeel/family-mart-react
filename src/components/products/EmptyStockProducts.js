@@ -7,6 +7,7 @@ import productService from "../../services/ProductServices";
 import CheckAdmin from "../../auth/CheckAdmin";
 import Pagination from "@material-ui/lab/Pagination";
 import Skeleton from "@material-ui/lab/Skeleton";
+import CustomBackdrop from "../backdrop/CustomBackdrop";
 const EmptyStockProducts = (props) => {
   const [imgBuffer, setImgBuffer] = React.useState("");
   const [products, setProducts] = React.useState([]);
@@ -15,17 +16,22 @@ const EmptyStockProducts = (props) => {
   const [perPage, setPerPage] = React.useState(10);
   const [notFound, setNotFound] = React.useState(false);
   const [total, setTotal] = React.useState(0);
+  const [loginProgress, setLoginProgress] = React.useState(false);
+
   const apiGETproducts = () => {
     setNotFound(false);
     productService
       .getOutOfStock(page, perPage)
       .then(function (data) {
         //   console.log(data[0].image.data);
+
         setProducts(data.product);
         setTotal(data.total);
         setDeleted(false);
+        setLoginProgress(false);
       })
       .catch(function (error) {
+        setLoginProgress(false);
         setNotFound(true);
         console.log(error);
       });
@@ -100,6 +106,7 @@ const EmptyStockProducts = (props) => {
             color="secondary"
           />
         </Grid> */}
+          <CustomBackdrop open={loginProgress} setOpen={setLoginProgress} />
           <Grid item xs={12}>
             {/* <Box display="flex" justifyContent="" alignItems="right"> */}
             <Box display="flex" justifyContent="center" alignItems="center">
@@ -107,6 +114,7 @@ const EmptyStockProducts = (props) => {
                 style={{ float: "right" }}
                 component="div"
                 onChange={(e, value) => {
+                  setLoginProgress(true);
                   setPage(value);
                 }}
                 value={page}
