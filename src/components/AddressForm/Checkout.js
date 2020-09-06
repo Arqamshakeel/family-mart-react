@@ -19,8 +19,8 @@ import productService from "../../services/ProductServices";
 //import axios from "axios";
 import io from "socket.io-client";
 import { useSelector } from "react-redux";
-//const socket = io.connect("http://localhost:4001");
 const socket = io.connect("http://localhost:4001");
+// const socket = io.connect("https://familymart.gq/api");
 // const socket = io.connect(
 //   "http://ec2-18-224-94-239.us-east-2.compute.amazonaws.com:4001"
 // );

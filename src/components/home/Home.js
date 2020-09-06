@@ -7,6 +7,7 @@ import productService from "../../services/ProductServices";
 import Skeleton from "@material-ui/lab/Skeleton";
 import Pagination from "@material-ui/lab/Pagination";
 import OrderFab from "../OrderFAB/OrderFab";
+import CustomBackdrop from "../backdrop/CustomBackdrop";
 const Home = (props) => {
   const [imgBuffer, setImgBuffer] = React.useState("");
   const [products, setProducts] = React.useState([]);
@@ -15,7 +16,7 @@ const Home = (props) => {
   const [deleted, setDeleted] = React.useState(false);
   const [notFound, setNotFound] = React.useState(false);
   const [total, setTotal] = React.useState(0);
-
+  const [loginProgress, setLoginProgress] = React.useState(false);
   const apiGETproducts = () => {
     setNotFound(false);
     productService
@@ -24,6 +25,7 @@ const Home = (props) => {
         setProducts(data.product);
         setTotal(data.total);
         setDeleted(false);
+        setLoginProgress(false);
       })
       .catch(function (error) {
         setNotFound(true);
@@ -32,6 +34,7 @@ const Home = (props) => {
   };
   React.useEffect(apiGETproducts, [deleted, page]);
   React.useEffect(() => {
+    // setLoginProgress(true);
     window.scrollTo(0, 0);
   }, [page]);
   return (
@@ -70,7 +73,7 @@ const Home = (props) => {
           <Typography variant="h5">Sorry there are no products</Typography>
         )}
       </Grid>
-
+      <CustomBackdrop open={loginProgress} setOpen={setLoginProgress} />
       <Grid container style={{ marginTop: "25px" }}>
         {/* <Grid item xs={12} md={4} lg={4}></Grid>
         <Grid item xs={12} md={3} lg={3}></Grid>
@@ -93,6 +96,7 @@ const Home = (props) => {
               style={{ float: "right" }}
               component="div"
               onChange={(e, value) => {
+                setLoginProgress(true);
                 setPage(value);
               }}
               value={page}

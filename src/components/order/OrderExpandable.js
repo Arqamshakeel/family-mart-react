@@ -27,6 +27,12 @@ const useRowStyles = makeStyles({
       borderBottom: "unset",
     },
   },
+  largeButton: {
+    padding: 0,
+  },
+  largeIcon: {
+    fontSize: "1.5em",
+  },
 });
 
 function createData(name, calories, fat, carbs, protein, price) {
@@ -55,18 +61,30 @@ function Row(props) {
     <React.Fragment>
       <TableRow className={classes.root}>
         <TableCell>
-          <IconButton
-            aria-label="expand row"
-            size="small"
-            onClick={() => setOpen(!open)}
-          >
-            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-          </IconButton>
+          <div>Order</div>
+        </TableCell>
+        <TableCell>
+          <div>
+            <IconButton
+              // style={{ float: "right" }}
+              className={classes.largeButton}
+              aria-label="expand row"
+              // size="large"
+              onClick={() => setOpen(!open)}
+            >
+              {open ? (
+                <KeyboardArrowUpIcon className={classes.largeIcon} />
+              ) : (
+                <KeyboardArrowDownIcon className={classes.largeIcon} />
+              )}
+            </IconButton>
+          </div>
         </TableCell>
         <TableCell component="th" scope="row">
           <IconButton
             aria-label="show 4 new mails"
             color="inherit"
+            className={classes.largeButton}
             onClick={() => {
               productService
                 .delOrder(row._id)
@@ -79,7 +97,7 @@ function Row(props) {
                 });
             }}
           >
-            <DeleteOutlineIcon />
+            <DeleteOutlineIcon className={classes.largeIcon} />
           </IconButton>
         </TableCell>
         <TableCell component="th" scope="row">
@@ -197,11 +215,12 @@ export default function OrderExpandable(props) {
             <TableRow>
               <TableCell />
               <TableCell>Action</TableCell>
+              <TableCell>Action</TableCell>
               <TableCell>Time</TableCell>
-              <TableCell>Customer Name</TableCell>
+              <TableCell align="left">Customer Name</TableCell>
               <TableCell align="left">Address</TableCell>
               <TableCell align="left">Phone no</TableCell>
-              <TableCell align="left">Area</TableCell>
+              <TableCell align="right">Area</TableCell>
               <TableCell align="right">Protein&nbsp;(g)</TableCell>
             </TableRow>
           </TableHead>
